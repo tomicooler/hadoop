@@ -86,7 +86,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.fs.CommonConfigurationKeys;
-import org.apache.hadoop.metrics2.lib.DefaultMetricsSystem;
 import org.apache.hadoop.net.NetworkTopology;
 import org.apache.hadoop.security.Credentials;
 import org.apache.hadoop.security.Groups;
@@ -172,7 +171,6 @@ import org.apache.hadoop.yarn.server.resourcemanager.scheduler.AbstractYarnSched
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.Allocation;
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.CSQueueMetricsForCustomResources;
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.ContainerUpdates;
-import org.apache.hadoop.yarn.server.resourcemanager.scheduler.QueueMetrics;
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.ResourceScheduler;
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.SchedulerApplication;
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.SchedulerApplicationAttempt;
@@ -211,9 +209,7 @@ import org.apache.hadoop.yarn.util.resource.DefaultResourceCalculator;
 import org.apache.hadoop.yarn.util.resource.DominantResourceCalculator;
 import org.apache.hadoop.yarn.util.resource.ResourceUtils;
 import org.apache.hadoop.yarn.util.resource.Resources;
-import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -228,46 +224,8 @@ public class TestCapacityScheduler extends CapacitySchedulerTestBase {
       LoggerFactory.getLogger(TestCapacityScheduler.class);
   private final static ContainerUpdates NULL_UPDATE_REQUESTS =
       new ContainerUpdates();
-  private ResourceManager resourceManager = null;
-  private RMContext mockContext;
 
   private static final double DELTA = 0.000001;
-
-  @Before
-  public void setUp() throws Exception {
-    ResourceUtils.resetResourceTypes(new Configuration());
-    DefaultMetricsSystem.setMiniClusterMode(true);
-    resourceManager = new ResourceManager() {
-      @Override
-      protected RMNodeLabelsManager createNodeLabelManager() {
-        RMNodeLabelsManager mgr = new NullRMNodeLabelsManager();
-        mgr.init(getConfig());
-        return mgr;
-      }
-    };
-    CapacitySchedulerConfiguration csConf
-       = new CapacitySchedulerConfiguration();
-    setupQueueConfiguration(csConf);
-    YarnConfiguration conf = new YarnConfiguration(csConf);
-    conf.setClass(YarnConfiguration.RM_SCHEDULER,
-        CapacityScheduler.class, ResourceScheduler.class);
-    resourceManager.init(conf);
-    resourceManager.getRMContext().getContainerTokenSecretManager().rollMasterKey();
-    resourceManager.getRMContext().getNMTokenSecretManager().rollMasterKey();
-    ((AsyncDispatcher)resourceManager.getRMContext().getDispatcher()).start();
-    mockContext = mock(RMContext.class);
-    when(mockContext.getConfigurationProvider()).thenReturn(
-        new LocalConfigurationProvider());
-  }
-
-  @After
-  public void tearDown() throws Exception {
-    if (resourceManager != null) {
-      QueueMetrics.clearQueueMetrics();
-      DefaultMetricsSystem.shutdown();
-      resourceManager.stop();
-    }
-  }
 
   private NodeManager registerNode(ResourceManager rm, String hostName,
       int containerManagerPort, int httpPort, String rackName,
