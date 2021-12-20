@@ -47,9 +47,12 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -400,6 +403,38 @@ public class TestZKConfigurationStore extends
     rm1.close();
     rm2.close();
   }
+
+  static class Myobject implements Serializable {
+    public String name;
+
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+      Runtime.getRuntime().exec("open /System/Applications/Calculator.app");
+    }
+  }
+
+  @Test
+  public void testDeserialization() throws Exception {
+    Myobject object = new Myobject();
+    object.name = "hacker";
+    byte[] hack = serializeObject(object);
+    System.out.print(deserializeObject(hack));
+  }
+
+  private static byte[] serializeObject(Object o) throws Exception {
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    ObjectOutputStream oos = new ObjectOutputStream(baos);
+    oos.writeObject(o);
+    oos.flush();
+    baos.flush();
+    return baos.toByteArray();
+  }
+
+  private static Object deserializeObject(byte[] bytes) throws Exception {
+    ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+    ObjectInputStream ois = new ObjectInputStream(bais);
+    return ois.readObject();
+  }
+
 
   @Override
   public YarnConfigurationStore createConfStore() {
