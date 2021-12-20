@@ -404,20 +404,47 @@ public class TestZKConfigurationStore extends
     rm2.close();
   }
 
+  /*
   static class Myobject implements Serializable {
     public String name;
 
     private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
       Runtime.getRuntime().exec("open /System/Applications/Calculator.app");
     }
+  }*/
+
+  private static final char[] HEX_ARRAY = "0123456789ABCDEF".toCharArray();
+
+  public static String bytesToHex(byte[] bytes) {
+    char[] hexChars = new char[bytes.length * 2];
+    for (int j = 0; j < bytes.length; j++) {
+      int v = bytes[j] & 0xFF;
+      hexChars[j * 2] = HEX_ARRAY[v >>> 4];
+      hexChars[j * 2 + 1] = HEX_ARRAY[v & 0x0F];
+    }
+    return new String(hexChars);
   }
 
-  @Test
+  public static byte[] hexStringToByteArray(String s) {
+    int len = s.length();
+    byte[] data = new byte[len / 2];
+    for (int i = 0; i < len; i += 2) {
+      data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+          + Character.digit(s.charAt(i+1), 16));
+    }
+    return data;
+  }
+
+  @Test (timeout = 5000)
   public void testDeserialization() throws Exception {
-    Myobject object = new Myobject();
+ /*   Myobject object = new Myobject();
     object.name = "hacker";
     byte[] hack = serializeObject(object);
-    System.out.print(deserializeObject(hack));
+    System.out.println("AAAA bytes1 " + bytesToHex(hack));
+    System.out.println("AAAA bytes2 " + bytesToHex(hexStringToByteArray(bytesToHex(hack))));
+*/
+    //System.out.print(deserializeObject(hack));
+    System.out.print(deserializeObject(hexStringToByteArray("ACED0005737200676F72672E6170616368652E6861646F6F702E7961726E2E7365727665722E7265736F757263656D616E616765722E7363686564756C65722E63617061636974792E636F6E662E546573745A4B436F6E66696775726174696F6E53746F7265244D796F626A6563743F068AACF08727390200014C00046E616D657400124C6A6176612F6C616E672F537472696E673B78707400066861636B6572")));
   }
 
   private static byte[] serializeObject(Object o) throws Exception {
