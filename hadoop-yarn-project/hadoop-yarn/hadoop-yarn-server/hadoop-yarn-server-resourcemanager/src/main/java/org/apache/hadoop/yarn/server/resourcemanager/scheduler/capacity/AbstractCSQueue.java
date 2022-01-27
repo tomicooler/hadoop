@@ -75,6 +75,9 @@ import java.util.Set;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacitySchedulerConfiguration.DOT;
+import static org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacitySchedulerConfiguration.getACLsForFlexibleAutoCreatedLeafQueue;
+import static org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacitySchedulerConfiguration.getACLsForFlexibleAutoCreatedParentQueue;
+import static org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacitySchedulerConfiguration.getACLsForLegacyAutoCreatedLeafQueue;
 
 public abstract class AbstractCSQueue implements CSQueue {
   private static final Logger LOG =
@@ -335,6 +338,8 @@ public abstract class AbstractCSQueue implements CSQueue {
     writeLock.lock();
     try {
       CapacitySchedulerConfiguration configuration = queueContext.getConfiguration();
+      this.acls = configuration.getAcls(getQueuePath());
+
       if (isDynamicQueue() || this instanceof AbstractAutoCreatedLeafQueue) {
         setDynamicQueueProperties();
       }
@@ -362,8 +367,6 @@ public abstract class AbstractCSQueue implements CSQueue {
       initializeQueueState();
 
       authorizer = YarnAuthorizationProvider.getInstance(configuration);
-
-      this.acls = configuration.getAcls(getQueuePath());
 
       this.userWeights = getUserWeightsFromHierarchy();
 
@@ -416,6 +419,23 @@ public abstract class AbstractCSQueue implements CSQueue {
         queueContext.getQueueManager()
             .getConfiguredNodeLabelsForAllQueues()
             .setLabelsByQueue(getQueuePath(), new HashSet<>(parentNodeLabels));
+      }
+
+      AutoCreatedQueueTemplate aqc = new AutoCreatedQueueTemplate(
+          queueContext.getConfiguration(),
+          parent.getQueuePathObject());
+
+      if (this instanceof ParentQueue) {
+        acls.putAll(getACLsForFlexibleAutoCreatedParentQueue(aqc));
+      }
+
+      if (this instanceof AbstractLeafQueue) {
+        if (parent instanceof AbstractManagedParentQueue) {
+          acls.putAll(getACLsForLegacyAutoCreatedLeafQueue(
+              queueContext.getConfiguration(), parent.getQueuePath()));
+        } else {
+          acls.putAll(getACLsForFlexibleAutoCreatedLeafQueue(aqc));
+        }
       }
     }
   }
