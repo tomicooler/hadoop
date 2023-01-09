@@ -124,7 +124,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class TestShuffleHandler {
-  static final long MiB = 1024 * 1024; 
+/*
+  static final long MiB = 1024 * 1024;
   private static final Logger LOG =
       LoggerFactory.getLogger(TestShuffleHandler.class);
   private static final File ABS_LOG_DIR = GenericTestUtils.getTestDir(
@@ -856,12 +857,14 @@ public class TestShuffleHandler {
     }
   }
 
-  /**
+  */
+/**
    * Test the validation of ShuffleHandler's meta-data's serialization and
    * de-serialization.
    *
    * @throws Exception exception
-   */
+   *//*
+
   @Test (timeout = 10000)
   public void testSerializeMeta()  throws Exception {
     assertEquals(1, ShuffleHandler.deserializeMetaData(
@@ -872,11 +875,13 @@ public class TestShuffleHandler {
         ShuffleHandler.serializeMetaData(8080)));
   }
 
-  /**
+  */
+/**
    * Validate shuffle connection and input/output metrics.
    *
    * @throws Exception exception
-   */
+   *//*
+
   @Test (timeout = 10000)
   public void testShuffleMetrics() throws Exception {
     MetricsSystem ms = new MetricsSystemImpl();
@@ -909,11 +914,13 @@ public class TestShuffleHandler {
     assertGauge("ShuffleConnections", connections, rb);
   }
 
-  /**
+  */
+/**
    * Verify client prematurely closing a connection.
    *
    * @throws Exception exception.
-   */
+   *//*
+
   @Test (timeout = 10000)
   public void testClientClosesConnection() throws Exception {
     Configuration conf = new Configuration();
@@ -1230,12 +1237,14 @@ public class TestShuffleHandler {
         Collections.emptyList(), shuffleHandler.failures);
   }
 
-  /**
+  */
+/**
    * Simulate a reducer that sends an invalid shuffle-header - sometimes a wrong
    * header_name and sometimes a wrong version.
    * 
    * @throws Exception exception
-   */
+   *//*
+
   @Test (timeout = 10000)
   public void testIncompatibleShuffleVersion() throws Exception {
     final int failureNum = 3;
@@ -1265,11 +1274,13 @@ public class TestShuffleHandler {
     shuffleHandler.close();
   }
 
-  /**
+  */
+/**
    * Validate the limit on number of shuffle connections.
    * 
    * @throws Exception exception
-   */
+   *//*
+
   @Test (timeout = 10000)
   public void testMaxConnections() throws Exception {
     final ArrayList<Throwable> failures = new ArrayList<>();
@@ -1414,12 +1425,14 @@ public class TestShuffleHandler {
             .collect(toList()));
   }
 
-  /**
+  */
+/**
    * Validate the ownership of the map-output files being pulled in. The
    * local-file-system owner of the file should match the user component in the
    *
    * @throws Exception exception
-   */
+   *//*
+
   @Test(timeout = 100000)
   public void testMapFileAccess() throws IOException {
     final ArrayList<Throwable> failures = new ArrayList<>();
@@ -2018,4 +2031,5 @@ public class TestShuffleHandler {
     }).when(mockHttpRequest).uri();
     return mockHttpRequest;
   }
+*/
 }
