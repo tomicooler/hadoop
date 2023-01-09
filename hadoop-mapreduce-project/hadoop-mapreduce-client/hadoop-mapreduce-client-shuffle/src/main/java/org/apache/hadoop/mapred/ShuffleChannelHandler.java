@@ -251,13 +251,7 @@ public class ShuffleChannelHandler extends SimpleChannelInboundHandler<FullHttpR
     ReduceContext reduceContext = new ReduceContext(mapIds, reduceId, ctx,
         user, mapOutputInfoMap, jobId, keepAlive);
 
-    // TODO this maxSessionOpenFiles is completely unnecessary, we write a sequential http chunked stream in the end
-    for (int i = 0; i < Math.min(handlerCtx.maxSessionOpenFiles, mapIds.size()); i++) {
-      ChannelFuture nextMap = sendMap(reduceContext);
-      if(nextMap == null) {
-        return;
-      }
-    }
+    sendMap(reduceContext);
   }
 
   /**
@@ -268,11 +262,9 @@ public class ShuffleChannelHandler extends SimpleChannelInboundHandler<FullHttpR
    * which can get really large(exhausting file descriptors on the NM) if all
    * sendMapOutputs are called in one go, as was done previous to this change.
    * @param reduceContext used to call sendMapOutput with correct params.
-   * @return the ChannelFuture of the sendMapOutput, can be null.
    */
-  public ChannelFuture sendMap(ReduceContext reduceContext) {
+  public void sendMap(ReduceContext reduceContext) {
     LOG.trace("Executing sendMap");
-    ChannelFuture nextMap = null;
     if (reduceContext.getMapsToSend().get() <
         reduceContext.getMapIds().size()) {
       int nextIndex = reduceContext.getMapsToSend().getAndIncrement();
@@ -285,7 +277,7 @@ public class ShuffleChannelHandler extends SimpleChannelInboundHandler<FullHttpR
               reduceContext.getJobId(), reduceContext.getUser());
         }
         LOG.trace("Calling sendMapOutput");
-        nextMap = sendMapOutput(
+        ChannelFuture nextMap = sendMapOutput(
             reduceContext.getCtx(),
             reduceContext.getCtx().channel(),
             reduceContext.getUser(), mapId,
@@ -294,7 +286,7 @@ public class ShuffleChannelHandler extends SimpleChannelInboundHandler<FullHttpR
           //This can only happen if spill file was not found
           sendError(reduceContext.getCtx(), NOT_FOUND);
           LOG.trace("Returning nextMap: null");
-          return null;
+          return;
         }
         nextMap.addListener(new ReduceMapFileCount(this, reduceContext));
       } catch (IOException e) {
@@ -306,10 +298,8 @@ public class ShuffleChannelHandler extends SimpleChannelInboundHandler<FullHttpR
         String errorMessage = getErrorMessage(e);
         sendError(reduceContext.getCtx(), errorMessage,
             INTERNAL_SERVER_ERROR);
-        return null;
       }
     }
-    return nextMap;
   }
 
   private String getErrorMessage(Throwable t) {
