@@ -35,9 +35,14 @@ import org.apache.hadoop.yarn.server.resourcemanager.scheduler.CSQueueMetricsFor
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.Queue;
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.QueueMetrics;
 import org.apache.hadoop.yarn.util.resource.ResourceUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Metrics(context = "yarn")
 public class CSQueueMetrics extends QueueMetrics {
+
+  private static final Logger LOG =
+      LoggerFactory.getLogger(CSQueueMetrics.class);
 
   //Metrics updated only for "default" partition
   @Metric("AM memory limit in MB")
@@ -234,17 +239,23 @@ public class CSQueueMetrics extends QueueMetrics {
       Queue parent, boolean enableUserMetrics, Configuration conf) {
     MetricsSystem ms = DefaultMetricsSystem.instance();
     QueueMetrics metrics = getQueueMetrics().get(queueName);
+    LOG.error("tomi CSQueueMetrics1 {} - {}", queueName, metrics);
     if (metrics == null) {
       metrics =
           new CSQueueMetrics(ms, queueName, parent, enableUserMetrics, conf)
               .tag(QUEUE_INFO, queueName);
 
+      LOG.error("tomi CSQueueMetrics2 {} - {}", queueName, metrics);
+
       // Register with the MetricsSystems
       if (ms != null) {
         MetricsSource source = ms.getSource(sourceName(queueName).toString());
         if (source != null) {
+          LOG.error("tomi CSQueueMetrics3 {} - {}", queueName, metrics);
           ms.unregisterSource(sourceName(queueName).toString());
         }
+
+        LOG.error("tomi CSQueueMetrics4 {} - {}", queueName, metrics);
         metrics =
             ms.register(sourceName(queueName).toString(), "Metrics for queue: "
                 + queueName, metrics);
