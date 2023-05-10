@@ -39,6 +39,7 @@ import org.apache.hadoop.metrics2.lib.MetricsRegistry;
 import org.apache.hadoop.metrics2.lib.MutableCounterInt;
 import org.apache.hadoop.metrics2.lib.MutableCounterLong;
 import org.apache.hadoop.metrics2.lib.MutableGaugeInt;
+import org.apache.hadoop.metrics2.lib.MutableGaugeIntTomi;
 import org.apache.hadoop.metrics2.lib.MutableGaugeLong;
 import org.apache.hadoop.metrics2.lib.MutableRate;
 import org.apache.hadoop.util.Sets;
@@ -59,7 +60,7 @@ import org.apache.hadoop.thirdparty.com.google.common.base.Splitter;
 @Metrics(context="yarn")
 public class QueueMetrics implements MetricsSource {
   @Metric("# of apps submitted") MutableCounterInt appsSubmitted;
-  @Metric("# of running apps") MutableGaugeInt appsRunning;
+  @Metric("# of running apps") MutableGaugeIntTomi appsRunning;
   @Metric("# of pending apps") MutableGaugeInt appsPending;
   @Metric("# of apps completed") MutableCounterInt appsCompleted;
   @Metric("# of apps killed") MutableCounterInt appsKilled;
@@ -206,6 +207,12 @@ public class QueueMetrics implements MetricsSource {
   protected QueueMetrics tag(MetricsInfo info, String value) {
     registry.tag(info, value);
     return this;
+  }
+
+  public static boolean Validation = false;
+
+  public void setParentOnAppsRunning(Object p) {
+    appsRunning.parent = p;
   }
 
   protected static StringBuilder sourceName(String queueName) {

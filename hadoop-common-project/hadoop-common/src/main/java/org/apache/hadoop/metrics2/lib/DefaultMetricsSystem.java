@@ -28,6 +28,8 @@ import org.apache.hadoop.metrics2.MetricsSystem;
 import org.apache.hadoop.metrics2.impl.MetricsSystemImpl;
 
 import org.apache.hadoop.classification.VisibleForTesting;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The default metrics system singleton. This class is used by all the daemon
@@ -39,6 +41,8 @@ import org.apache.hadoop.classification.VisibleForTesting;
 @InterfaceStability.Evolving
 public enum DefaultMetricsSystem {
   INSTANCE; // the singleton
+
+  static final Logger LOG = LoggerFactory.getLogger(DefaultMetricsSystem.class);
 
   private AtomicReference<MetricsSystem> impl =
       new AtomicReference<MetricsSystem>(new MetricsSystemImpl());
@@ -117,6 +121,7 @@ public enum DefaultMetricsSystem {
 
   @InterfaceAudience.Private
   public static void removeSourceName(String name) {
+    LOG.error("tomi DMS: removeSourceName {}", name);
     INSTANCE.removeSource(name);
   }
 

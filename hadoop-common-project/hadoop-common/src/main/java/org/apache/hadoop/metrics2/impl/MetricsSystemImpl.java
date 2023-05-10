@@ -227,15 +227,18 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
     final String finalDesc = desc == null ? si.description() : desc;
     final String finalName = // be friendly to non-metrics tests
         DefaultMetricsSystem.sourceName(name2, !monitoring);
+    LOG.error("tomi register1 {} {}", name, finalName);
     allSources.put(finalName, s);
     LOG.debug(finalName +", "+ finalDesc);
     if (monitoring) {
+      LOG.error("tomi register2 {} {}", name, finalName);
       registerSource(finalName, finalDesc, s);
     }
     // We want to re-register the source to pick up new config when the
     // metrics system restarts.
     register(finalName, new AbstractCallback() {
       @Override public void postStart() {
+        LOG.error("tomi postStart final... {} {}", finalName, s);
         registerSource(finalName, finalDesc, s);
       }
     });
@@ -244,16 +247,21 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
 
   @Override public synchronized
   void unregisterSource(String name) {
+    LOG.error("tomi unregisterSource1 {}", name);
     if (sources.containsKey(name)) {
+      LOG.error("tomi unregisterSource2 {}", name);
       sources.get(name).stop();
       sources.remove(name);
     }
     if (allSources.containsKey(name)) {
+      LOG.error("tomi unregisterSource3 {}", name);
       allSources.remove(name);
     }
     if (namedCallbacks.containsKey(name)) {
+      LOG.error("tomi unregisterSource4 {}", name);
       namedCallbacks.remove(name);
     }
+    LOG.error("tomi unregisterSource5 {}", name);
     DefaultMetricsSystem.removeSourceName(name);
   }
 
@@ -266,7 +274,7 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
             : config.subset(SOURCE_KEY));
     sources.put(name, sa);
     sa.start();
-    LOG.debug("Registered source "+ name);
+    LOG.error("tomi Registered source "+ name);
   }
 
   @Override public synchronized <T extends MetricsSink>
@@ -290,6 +298,7 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
         register(name, description, sink);
       }
     });
+    LOG.error("tomi sink1 {} {}", name, sink);
     return sink;
   }
 
@@ -303,6 +312,7 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
     allSinks.put(name, sink);
     sa.start();
     LOG.info("Registered sink "+ name);
+    LOG.error("tomi sink2 {} {}", name, sink);
   }
 
   @Override
@@ -333,6 +343,7 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
 
   @Override
   public synchronized void startMetricsMBeans() {
+    LOG.error("tomi startMetricsMBeans");
     for (MetricsSourceAdapter sa : sources.values()) {
       sa.startMBeans();
     }
@@ -375,12 +386,13 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
             }
           }
         }, millis, millis);
-    LOG.info("Scheduled Metric snapshot period at " + (period / 1000)
+    LOG.error("tomi Scheduled Metric snapshot period at " + (period / 1000)
         + " second(s).");
   }
 
   synchronized void onTimerEvent() {
     logicalTime += period;
+    LOG.error("tomi onTimerEvent {}", sinks.size());
     if (sinks.size() > 0) {
       publishMetrics(sampleMetrics(), false);
     }
@@ -434,6 +446,7 @@ public class MetricsSystemImpl extends MetricsSystem implements MetricsSource {
    */
   synchronized void publishMetrics(MetricsBuffer buffer, boolean immediate) {
     int dropped = 0;
+    LOG.error("tomi publishMetrics");
     for (MetricsSinkAdapter sa : sinks.values()) {
       long startTime = Time.monotonicNow();
       boolean result;

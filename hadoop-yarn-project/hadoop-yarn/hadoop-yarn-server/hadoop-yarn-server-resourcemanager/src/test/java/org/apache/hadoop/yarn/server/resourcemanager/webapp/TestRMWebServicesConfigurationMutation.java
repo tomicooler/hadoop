@@ -1053,6 +1053,9 @@ public class TestRMWebServicesConfigurationMutation extends JerseyTestBase {
     QueueConfigInfo aUpdateInfo = new QueueConfigInfo("root.a", updateParam);
     updateInfo.getUpdateQueueInfo().add(aUpdateInfo);
 
+    System.out.println("tomi wtf: " + toJson(updateInfo,
+        SchedConfUpdateInfo.class));
+
     ClientResponse response =
         r.path("ws").path("v1").path("cluster")
             .path(RMWSConsts.SCHEDULER_CONF_VALIDATE)
@@ -1062,6 +1065,14 @@ public class TestRMWebServicesConfigurationMutation extends JerseyTestBase {
                 SchedConfUpdateInfo.class), MediaType.APPLICATION_JSON)
             .post(ClientResponse.class);
     assertEquals(Status.OK.getStatusCode(), response.getStatus());
+
+    ClientResponse response2 =
+        r.path("jmx")
+            .queryParam("user.name", userName)
+            .accept(MediaType.APPLICATION_JSON)
+            .get(ClientResponse.class);
+
+    System.out.println("tomi resp2: " + response2);
   }
 
   @Override

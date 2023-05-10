@@ -43,6 +43,7 @@ public final class CapacitySchedulerConfigValidator {
   public static boolean validateCSConfiguration(
           final Configuration oldConf, final Configuration newConf,
           final RMContext rmContext) throws IOException {
+    QueueMetrics.Validation = true;
     CapacityScheduler liveScheduler = (CapacityScheduler) rmContext.getScheduler();
     CapacityScheduler newCs = new CapacityScheduler();
     try {
@@ -56,6 +57,7 @@ public final class CapacitySchedulerConfigValidator {
       return true;
     } finally {
       newCs.stop();
+      QueueMetrics.Validation = false;
       QueueMetrics.clearQueueMetrics();
       liveScheduler.resetSchedulerMetrics();
     }

@@ -58,6 +58,9 @@ public class MutableMetricsFactory {
     if (cls == MutableGaugeInt.class) {
       return registry.newGauge(info, 0);
     }
+    if (cls == MutableGaugeIntTomi.class) {
+      return registry.newGaugeTomi(info, 0);
+    }
     if (cls == MutableGaugeLong.class) {
       return registry.newGauge(info, 0L);
     }

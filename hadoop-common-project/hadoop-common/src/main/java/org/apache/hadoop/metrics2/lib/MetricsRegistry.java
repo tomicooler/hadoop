@@ -156,6 +156,13 @@ public class MetricsRegistry {
     return ret;
   }
 
+  public synchronized MutableGaugeIntTomi newGaugeTomi(MetricsInfo info, int iVal) {
+    checkMetricName(info.name());
+    MutableGaugeIntTomi ret = new MutableGaugeIntTomi(info, iVal);
+    metricsMap.put(info.name(), ret);
+    return ret;
+  }
+
   /**
    * Create a mutable long integer gauge
    * @param name  of the metric

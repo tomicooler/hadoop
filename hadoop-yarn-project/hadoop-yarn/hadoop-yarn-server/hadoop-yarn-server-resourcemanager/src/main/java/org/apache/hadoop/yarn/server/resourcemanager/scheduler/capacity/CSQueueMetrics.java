@@ -255,11 +255,12 @@ public class CSQueueMetrics extends QueueMetrics {
           ms.unregisterSource(sourceName(queueName).toString());
         }
 
-        LOG.error("tomi CSQueueMetrics4 {} - {}", queueName, metrics);
+        LOG.error("tomi CSQueueMetrics4  not registering new {} - {}", queueName, metrics);
         metrics =
             ms.register(sourceName(queueName).toString(), "Metrics for queue: "
                 + queueName, metrics);
       }
+
       getQueueMetrics().put(queueName, metrics);
     }
 
