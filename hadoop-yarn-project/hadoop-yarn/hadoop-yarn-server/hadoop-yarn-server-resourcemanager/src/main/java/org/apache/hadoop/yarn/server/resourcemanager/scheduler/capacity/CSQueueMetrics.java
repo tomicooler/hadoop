@@ -25,6 +25,7 @@ import org.apache.hadoop.metrics2.MetricsSource;
 import org.apache.hadoop.metrics2.MetricsSystem;
 import org.apache.hadoop.metrics2.annotation.Metric;
 import org.apache.hadoop.metrics2.annotation.Metrics;
+import org.apache.hadoop.metrics2.impl.DummyMetricsSystemImpl;
 import org.apache.hadoop.metrics2.lib.DefaultMetricsSystem;
 import org.apache.hadoop.metrics2.lib.MutableGaugeFloat;
 import org.apache.hadoop.metrics2.lib.MutableGaugeInt;
@@ -237,7 +238,7 @@ public class CSQueueMetrics extends QueueMetrics {
 
   public synchronized static CSQueueMetrics forQueue(String queueName,
       Queue parent, boolean enableUserMetrics, Configuration conf) {
-    MetricsSystem ms = DefaultMetricsSystem.instance();
+    MetricsSystem ms = QueueMetrics.Validation ? new DummyMetricsSystemImpl() : DefaultMetricsSystem.instance();
     QueueMetrics metrics = getQueueMetrics().get(queueName);
     LOG.error("tomi CSQueueMetrics1 {} - {}", queueName, metrics);
     if (metrics == null) {
