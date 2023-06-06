@@ -69,9 +69,9 @@ public class TestMixedQueueResourceCalculation extends CapacitySchedulerQueueCal
   private static final Resource ZERO_RESOURCE = Resource.newInstance(0, 0);
 
   private static final Resource A_COMPLEX_NO_REMAINING_RESOURCE = Resource.newInstance(2486, 9);
-  private static final Resource A1_COMPLEX_NO_REMAINING_RESOURCE = Resource.newInstance(621, 4);
+  private static final Resource A1_COMPLEX_NO_REMAINING_RESOURCE = Resource.newInstance(622, 4);
   private static final Resource A11_COMPLEX_NO_REMAINING_RESOURCE = Resource.newInstance(217, 1);
-  private static final Resource A12_COMPLEX_NO_REMAINING_RESOURCE = Resource.newInstance(403, 3);
+  private static final Resource A12_COMPLEX_NO_REMAINING_RESOURCE = Resource.newInstance(404, 3);
   private static final Resource A2_COMPLEX_NO_REMAINING_RESOURCE = Resource.newInstance(1865, 5);
   private static final Resource B_COMPLEX_NO_REMAINING_RESOURCE = Resource.newInstance(8095, 3);
   private static final Resource B1_COMPLEX_NO_REMAINING_RESOURCE = Resource.newInstance(8095, 3);
@@ -376,7 +376,7 @@ public class TestMixedQueueResourceCalculation extends CapacitySchedulerQueueCal
       update(assertionBuilder, UPDATE_RESOURCE);
       Assert.fail("WEIGHT maximum capacity type is not supported, an error should be thrown when " +
           "set up");
-    } catch (IllegalStateException ignored) {
+    } catch (IOException ignored) {
     }
   }
 
