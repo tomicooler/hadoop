@@ -1145,10 +1145,10 @@ public abstract class AbstractParentQueue extends AbstractCSQueue {
       ResourceLimits resourceLimits) {
     System.out.println("AbstractParentQueue.updateClusterResource " + queuePath);
 
-    if (queueContext.getConfiguration().isLegacyQueueMode()) {
-      updateClusterResourceDeprecated(clusterResource, resourceLimits);
-      return;
-    }
+    //if (queueContext.getConfiguration().isLegacyQueueMode()) {
+    //  updateClusterResourceDeprecated(clusterResource, resourceLimits);
+    //  return;
+    //}
 
     CapacitySchedulerQueueCapacityHandler handler =
         queueContext.getQueueManager().getQueueCapacityHandler();
