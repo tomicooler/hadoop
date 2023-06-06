@@ -875,7 +875,7 @@
               "orderingPolicyInfo" : "fifo",
               "autoCreateChildQueueEnabled" : false,
               "leafQueueTemplate" : { },
-              "mode" : "absolute",
+              "mode" : "percentage",
               "queueType" : "leaf",
               "creationMethod" : "dynamicLegacy",
               "autoCreationEligibility" : "off",
