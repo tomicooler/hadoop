@@ -210,6 +210,10 @@ public class QueueCapacityVector implements
         && !capacityTypes.get(resourceName).equals(resourceType)) {
       capacityTypePerResource.get(capacityTypes.get(resourceName))
           .remove(resourceName);
+      // TODO unit test this
+      if (capacityTypePerResource.get(capacityTypes.get(resourceName)).isEmpty()) {
+        capacityTypePerResource.remove(capacityTypes.get(resourceName));
+      }
     }
 
     capacityTypePerResource.putIfAbsent(resourceType, new HashSet<>());

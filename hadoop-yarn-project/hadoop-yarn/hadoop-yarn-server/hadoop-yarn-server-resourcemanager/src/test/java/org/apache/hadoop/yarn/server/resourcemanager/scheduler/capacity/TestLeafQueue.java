@@ -231,7 +231,7 @@ public class TestLeafQueue {
     when(csContext.getContainerTokenSecretManager()).thenReturn(
         containerTokenSecretManager);
     CapacitySchedulerQueueManager queueManager =
-        new CapacitySchedulerQueueManager(csConf, null, null);
+        new CapacitySchedulerQueueManager(csConf, rmContext.getNodeLabelManager(), null);
     when(csContext.getCapacitySchedulerQueueManager()).thenReturn(queueManager);
 
     queueManager.reinitConfiguredNodeLabels(csConf);
@@ -5137,19 +5137,37 @@ public class TestLeafQueue {
 
       assertEquals(0, conf.size());
       conf.setNodeLocalityDelay(60);
+
+      Resource clusterResource =
+          Resources.createResource(0, 0);
+      csConf.setQueues(ROOT, new String[] {leafQueueName, B});
       csConf.setCapacity(ROOT + DOT + leafQueueName, 10);
-      csConf.setMaximumCapacity(ROOT + DOT + leafQueueName, 100);
-      csConf.setUserLimitFactor(ROOT + DOT +leafQueueName, 0.1f);
+      csConf.setMaximumCapacity(ROOT + DOT + leafQueueName,
+          100);
+      csConf.setUserLimitFactor(ROOT + DOT + leafQueueName, 0.1f);
+
+      csConf.setCapacity(ROOT + DOT + B, 90);
+      csConf.setMaximumCapacity(ROOT + DOT + B,
+          100);
 
       csConf.setNodeLocalityDelay(30);
       csConf.setGlobalMaximumApplicationsPerQueue(20);
       queueContext.reinitialize();
 
-      LeafQueue leafQueue = new LeafQueue(queueContext, leafQueueName, cs.getRootQueue(),
-          null);
+      // reinitialize queues
+      CSQueueStore newQueues = new CSQueueStore();
+      CSQueue newRoot =
+          CapacitySchedulerQueueManager.parseQueue(queueContext, csConf, null,
+              CapacitySchedulerConfiguration.ROOT,
+              newQueues, queues,
+              TestUtils.spyHook);
+      queues = newQueues;
+      root.reinitialize(newRoot, csContext.getClusterResource());
+      root.updateClusterResource(clusterResource,
+          new ResourceLimits(clusterResource));
 
-      leafQueue.updateClusterResource(Resource.newInstance(0, 0),
-          new ResourceLimits(Resource.newInstance(0, 0)));
+      // Mock the queue
+      LeafQueue leafQueue = stubLeafQueue((LeafQueue)queues.get(leafQueueName));
 
       assertEquals(30, leafQueue.getNodeLocalityDelay());
       assertEquals(20, leafQueue.getMaxApplications());

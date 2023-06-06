@@ -227,6 +227,11 @@ public class ResourceCalculationDriver {
             context.getResourceName(), context.getCapacityType())) {
           continue;
         }
+
+        if (!overallRemainingResourcePerLabel.containsKey(label)) {
+          continue;
+        }
+
         double usedResourceByChild = setChildResources(context, label);
         double aggregatedUsedResource = usedResourceByCurrentCalculatorPerLabel.getOrDefault(label,
             0d);
@@ -299,6 +304,7 @@ public class ResourceCalculationDriver {
     if (maximumResource < minimumResource) {
       updateContext.addUpdateWarning(QueueUpdateWarningType.QUEUE_EXCEEDS_MAX_RESOURCE.ofQueue(
           context.getQueue().getQueuePath()));
+
       minimumResource = maximumResource;
     }
 

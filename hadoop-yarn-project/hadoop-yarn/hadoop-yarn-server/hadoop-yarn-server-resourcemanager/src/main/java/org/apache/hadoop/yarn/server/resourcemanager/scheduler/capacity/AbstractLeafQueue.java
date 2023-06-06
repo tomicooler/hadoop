@@ -1944,6 +1944,9 @@ public class AbstractLeafQueue extends AbstractCSQueue {
   @Override
   public void refreshAfterResourceCalculation(Resource clusterResource,
       ResourceLimits resourceLimits) {
+
+    LOG.error("tomi ALQ refreshAfterResourceCalculation {}", queuePath);
+
     lastClusterResource = clusterResource;
     // Update maximum applications for the queue and for users
     updateMaximumApplications();
@@ -1987,6 +1990,19 @@ public class AbstractLeafQueue extends AbstractCSQueue {
   @Override
   public void updateClusterResource(Resource clusterResource,
       ResourceLimits currentResourceLimits) {
+    System.out.println("AbstractLeafQueue.updateClusterResource " + queuePath);
+
+    if (queueContext.getConfiguration().isLegacyQueueMode()) {
+      updateClusterResourceDeprecated(clusterResource, currentResourceLimits);
+      return;
+    }
+
+    queueContext.getQueueManager().getQueueCapacityHandler()
+        .updateChildren(clusterResource, getParent());
+  }
+
+  public void updateClusterResourceDeprecated(Resource clusterResource,
+                                              ResourceLimits currentResourceLimits) {
     writeLock.lock();
     try {
       lastClusterResource = clusterResource;

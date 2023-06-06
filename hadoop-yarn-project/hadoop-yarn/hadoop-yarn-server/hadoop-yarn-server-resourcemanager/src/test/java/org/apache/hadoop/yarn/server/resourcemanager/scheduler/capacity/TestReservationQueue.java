@@ -28,6 +28,8 @@ import java.io.IOException;
 
 import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.apache.hadoop.yarn.server.resourcemanager.RMContext;
+import org.apache.hadoop.yarn.server.resourcemanager.nodelabels.NullRMNodeLabelsManager;
+import org.apache.hadoop.yarn.server.resourcemanager.nodelabels.RMNodeLabelsManager;
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.ResourceLimits;
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.SchedulerDynamicEditException;
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.preemption.PreemptionManager;
@@ -65,6 +67,10 @@ public class TestReservationQueue {
         CapacitySchedulerQueueManager.class);
     ConfiguredNodeLabels labels = new ConfiguredNodeLabels(csConf);
     when(csQm.getConfiguredNodeLabelsForAllQueues()).thenReturn(labels);
+    RMNodeLabelsManager mgr = new NullRMNodeLabelsManager();
+    mgr.init(csConf);
+    when(csQm.getQueueCapacityHandler()).thenReturn(
+        new CapacitySchedulerQueueCapacityHandler(mgr, csConf));
     when(csContext.getConfiguration()).thenReturn(csConf);
     when(csContext.getCapacitySchedulerQueueManager()).thenReturn(csQm);
     when(csContext.getConf()).thenReturn(conf);

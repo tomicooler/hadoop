@@ -1130,6 +1130,8 @@ public abstract class AbstractParentQueue extends AbstractCSQueue {
   @Override
   public void refreshAfterResourceCalculation(Resource clusterResource,
       ResourceLimits resourceLimits) {
+    LOG.error("tomi APQ refreshAfterResourceCalculation {}", queuePath);
+
     CSQueueUtils.updateQueueStatistics(resourceCalculator, clusterResource,
         this, labelManager, null);
     // Update configured capacity/max-capacity for default partition only
@@ -1141,6 +1143,25 @@ public abstract class AbstractParentQueue extends AbstractCSQueue {
   @Override
   public void updateClusterResource(Resource clusterResource,
       ResourceLimits resourceLimits) {
+    System.out.println("AbstractParentQueue.updateClusterResource " + queuePath);
+
+    if (queueContext.getConfiguration().isLegacyQueueMode()) {
+      updateClusterResourceDeprecated(clusterResource, resourceLimits);
+      return;
+    }
+
+    CapacitySchedulerQueueCapacityHandler handler =
+        queueContext.getQueueManager().getQueueCapacityHandler();
+    if (rootQueue) {
+      handler.updateRoot(this, clusterResource);
+      handler.updateChildren(clusterResource, this);
+    } else {
+      handler.updateChildren(clusterResource, getParent());
+    }
+  }
+
+  public void updateClusterResourceDeprecated(Resource clusterResource,
+                                              ResourceLimits resourceLimits) {
     writeLock.lock();
     try {
       // Special handle root queue

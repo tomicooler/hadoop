@@ -1086,8 +1086,15 @@ public class TestParentQueue {
     root.updateClusterResource(clusterResource,
         new ResourceLimits(clusterResource));
 
-    Resource QUEUE_B_RESOURCE_70PERC = Resource.newInstance(7 * 1024, 27);
-    Resource QUEUE_A_RESOURCE_30PERC = Resource.newInstance(3 * 1024, 12);
+    // Legacy mode uses the ResourceCalculator.lessThan() function for comparison
+    //      DefaultResourceCalculator only compares the memory
+    //      DominantResourceCalculator compares the dominants
+    // While the non-legacy mode compares the resources individually
+    // Further details: YARN-11507
+    Resource QUEUE_B_RESOURCE_70PERC =
+        Resource.newInstance(7 * 1024, csConf.isLegacyQueueMode() ? 27 : 22);
+    Resource QUEUE_A_RESOURCE_30PERC =
+        Resource.newInstance(3 * 1024, csConf.isLegacyQueueMode() ? 12 : 10);
     assertEquals(a.getQueueResourceQuotas().getConfiguredMinResource(),
         QUEUE_A_RESOURCE);
     assertEquals(b.getQueueResourceQuotas().getConfiguredMinResource(),
