@@ -1992,11 +1992,10 @@ public class AbstractLeafQueue extends AbstractCSQueue {
       ResourceLimits currentResourceLimits) {
     System.out.println("AbstractLeafQueue.updateClusterResource " + queuePath);
 
-    if (queueContext.getConfiguration().isLegacyQueueMode()) {
-      System.out.println("tomi LEGACY");
-      updateClusterResourceDeprecated(clusterResource, currentResourceLimits);
-      return;
-    }
+    //if (queueContext.getConfiguration().isLegacyQueueMode()) {
+    //  updateClusterResourceDeprecated(clusterResource, currentResourceLimits);
+    //  return;
+    //}
 
     queueContext.getQueueManager().getQueueCapacityHandler()
         .updateChildren(clusterResource, getParent());
