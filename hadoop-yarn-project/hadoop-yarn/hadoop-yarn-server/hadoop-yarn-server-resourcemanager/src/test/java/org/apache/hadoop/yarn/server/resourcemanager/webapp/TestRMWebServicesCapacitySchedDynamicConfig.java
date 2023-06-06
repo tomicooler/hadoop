@@ -189,6 +189,7 @@ public class TestRMWebServicesCapacitySchedDynamicConfig extends
     conf.put("yarn.scheduler.capacity.root.c.state", "STOPPED");
 
     initResourceManager(createConfiguration(conf));
+    rm.registerNode("h1:1234", 6144, 6);
 
     assertJsonResponse(sendRequest(),"webapp/question.json");
   }
