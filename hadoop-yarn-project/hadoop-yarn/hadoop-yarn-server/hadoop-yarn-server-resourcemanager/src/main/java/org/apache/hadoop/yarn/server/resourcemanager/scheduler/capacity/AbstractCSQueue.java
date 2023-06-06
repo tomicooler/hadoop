@@ -74,6 +74,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import static org.apache.hadoop.yarn.nodelabels.CommonNodeLabelsManager.NO_LABEL;
 import static org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacitySchedulerConfiguration.DOT;
+import static org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.QueueCapacityVector.ResourceUnitCapacityType.PERCENTAGE;
 
 /**
  * Provides implementation of {@code CSQueue} methods common for every queue class in Capacity
@@ -320,6 +321,8 @@ public abstract class AbstractCSQueue implements CSQueue {
 
       queueCapacities.setMaximumCapacity(maximumCapacity);
       queueCapacities.setAbsoluteMaximumCapacity(absMaxCapacity);
+      configuredMaxCapacityVectors.put(NO_LABEL, QueueCapacityVector.of(
+                    maximumCapacity * 100, PERCENTAGE));
     } finally {
       writeLock.unlock();
     }
@@ -410,7 +413,7 @@ public abstract class AbstractCSQueue implements CSQueue {
    */
   protected void setDynamicQueueProperties() {
     // Set properties from parent template
-    if (parent instanceof AbstractParentQueue) {
+    if (parent instanceof AbstractParentQueue && isDynamicQueue()) {
       ((AbstractParentQueue) parent).getAutoCreatedQueueTemplate()
           .setTemplateEntriesForChild(queueContext.getConfiguration(), getQueuePath());
 
@@ -422,10 +425,18 @@ public abstract class AbstractCSQueue implements CSQueue {
           .getConfiguredNodeLabelsForAllQueues()
           .getLabelsByQueue(parentTemplate);
 
-      if (parentNodeLabels != null && parentNodeLabels.size() > 1) {
-        queueContext.getQueueManager()
-            .getConfiguredNodeLabelsForAllQueues()
-            .setLabelsByQueue(getQueuePath(), new HashSet<>(parentNodeLabels));
+      if (parentNodeLabels != null) {
+        if (parentNodeLabels.size() > 1) {
+          queueContext.getQueueManager().getConfiguredNodeLabelsForAllQueues()
+              .setLabelsByQueue(getQueuePath(), new HashSet<>(parentNodeLabels));
+        }
+        // Default to weight 1
+        for (String label : parentNodeLabels) {
+          float weightByLabel = queueContext.getConfiguration().getLabeledQueueWeight(queuePath, label);
+          if (weightByLabel == -1) {
+            queueContext.getConfiguration().setLabeledQueueWeight(queuePath.getFullPath(), label, 1);
+          }
+        }
       }
     }
   }

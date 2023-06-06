@@ -44,8 +44,16 @@ public class AbsoluteResourceCapacityCalculator extends AbstractQueueCapacityCal
     double remainingResourceRatio = resourceCalculationDriver.getRemainingRatioOfResource(
         label, resourceName);
 
-    return normalizedRatio * remainingResourceRatio * context.getCurrentMinimumCapacityEntry(
+    double minimumCapacity = context.getCurrentMinimumCapacityEntry(
         label).getResourceValue();
+    System.out.println("        abs calculateMinimumResource " + normalizedRatio + " " + remainingResourceRatio + " " +
+        minimumCapacity);
+
+    if (normalizedRatio != 0 && !Double.isNaN(remainingResourceRatio)) {
+      return normalizedRatio * remainingResourceRatio * minimumCapacity;
+    }
+
+    return minimumCapacity;
   }
 
   @Override
@@ -60,6 +68,22 @@ public class AbsoluteResourceCapacityCalculator extends AbstractQueueCapacityCal
       ResourceCalculationDriver resourceCalculationDriver, CSQueue queue, String label) {
     CapacitySchedulerQueueCapacityHandler.setQueueCapacities(
         resourceCalculationDriver.getUpdateContext().getUpdatedClusterResource(label), queue, label);
+
+    System.out.println("tomi updateCapacitiesAfterCalculation absolute max capacity " + queue.getQueuePath());
+    if (queue.getParent() != null) {
+      System.out.println("tomi updateCapacitiesAfterCalculation absolute max capacity " + queue.getQueuePath() + " " + queue.getQueueCapacities().getMaximumCapacity(label) + " * " + queue.getParent().getQueueCapacities()
+          .getAbsoluteMaximumCapacity(label));
+
+      // Update absolute maxCapacity (as in fraction of the
+      // whole cluster's resources) with a float calculated from the queue's
+      // maxCapacity and the parent's absoluteMaxCapacity.
+      // absoluteMaxCapacity = maxCapacity * parent's absoluteMaxCapacity
+      queue.getQueueCapacities().setAbsoluteMaximumCapacity(label,
+          queue.getQueueCapacities().getMaximumCapacity(label) *
+              queue.getParent().getQueueCapacities()
+                  .getAbsoluteMaximumCapacity(label));
+    }
+
   }
 
   @Override
