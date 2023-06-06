@@ -37,6 +37,7 @@ import org.apache.hadoop.yarn.server.resourcemanager.scheduler.QueueResourceQuot
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.ResourceUsage;
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.AbstractCSQueue;
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.AbstractParentQueue;
+import org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CSQueueMetrics;
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacityScheduler;
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacitySchedulerConfiguration;
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CSQueue;
@@ -63,6 +64,8 @@ public class CapacitySchedulerQueueInfo {
   protected float normalizedWeight;
   protected int numApplications;
   protected int maxParallelApps;
+  protected long guaranteedMB;
+  protected long guaranteedVCores;
   protected String queueName;
   protected boolean isAbsoluteResource;
   protected QueueState state;
@@ -181,6 +184,9 @@ public class CapacitySchedulerQueueInfo {
     autoCreateChildQueueEnabled = conf.
         isAutoCreateChildQueueEnabled(queuePath);
     leafQueueTemplate = new LeafQueueTemplateInfo(conf, queuePath);
+
+    guaranteedMB = ((CSQueueMetrics)q.getMetrics()).getGuaranteedMB();
+    guaranteedVCores = ((CSQueueMetrics)q.getMetrics()).getGuaranteedVCores();
   }
 
   public static ArrayList<QueueAclInfo> getSortedQueueAclInfoList(
