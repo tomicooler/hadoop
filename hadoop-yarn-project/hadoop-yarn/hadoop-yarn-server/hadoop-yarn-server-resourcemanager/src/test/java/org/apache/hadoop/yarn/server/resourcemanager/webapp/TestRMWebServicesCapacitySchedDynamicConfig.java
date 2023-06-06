@@ -40,6 +40,7 @@ import org.apache.hadoop.yarn.webapp.GuiceServletConfig;
 import org.apache.hadoop.yarn.webapp.JerseyTestBase;
 import org.junit.Test;
 
+import static org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacitySchedulerConfigGeneratorForTest.createConfiguration;
 import static org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacitySchedulerTestUtilities.GB;
 import static org.apache.hadoop.yarn.server.resourcemanager.webapp.TestRMWebServicesCapacitySched.assertJsonResponse;
 import static org.apache.hadoop.yarn.server.resourcemanager.webapp.TestRMWebServicesCapacitySched.createMockRM;
@@ -167,6 +168,29 @@ public class TestRMWebServicesCapacitySchedDynamicConfig extends
 
     assertJsonResponse(sendRequest(),
         "webapp/scheduler-response-WeightModeWithAutoCreatedQueues-After.json");
+  }
+
+  @Test
+  public void testSchedulerAbsolute1()
+      throws Exception {
+    Map<String, String> conf = new HashMap<>();
+    conf.put("yarn.scheduler.capacity.root.queues", "queue1, queue2");
+    conf.put("yarn.scheduler.capacity.root.capacity", "[memory=6144,vcores=6]");
+    conf.put("yarn.scheduler.capacity.root.queue1.capacity", "[memory=1024,vcores=2]");
+    conf.put("yarn.scheduler.capacity.root.queue2.capacity", "[memory=5120,vcores=4]");
+    conf.put("yarn.scheduler.capacity.root.b.b1.state", "STOPPED");
+    conf.put("yarn.scheduler.capacity.root.a.a1.a1c.state", "STOPPED");
+    conf.put("yarn.scheduler.capacity.root.a.a1.a1b.state", "STOPPED");
+    conf.put("yarn.scheduler.capacity.root.a.a1.a1a.state", "STOPPED");
+    conf.put("yarn.scheduler.capacity.root.a.a2.state", "STOPPED");
+    conf.put("yarn.scheduler.capacity.root.a.state", "STOPPED");
+    conf.put("yarn.scheduler.capacity.root.b.b3.state", "STOPPED");
+    conf.put("yarn.scheduler.capacity.root.b.state", "STOPPED");
+    conf.put("yarn.scheduler.capacity.root.c.state", "STOPPED");
+
+    initResourceManager(createConfiguration(conf));
+
+    assertJsonResponse(sendRequest(),"webapp/question.json");
   }
 
   private void initAutoQueueHandler(int nodeMemory) throws Exception {
