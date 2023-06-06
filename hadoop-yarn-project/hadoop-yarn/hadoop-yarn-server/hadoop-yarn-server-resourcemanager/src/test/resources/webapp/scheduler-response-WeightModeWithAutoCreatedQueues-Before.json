@@ -115,8 +115,8 @@
           ]}
         },
         "effectiveMinResource": {
-          "memory": 273066,
-          "vCores": 266,
+          "memory": 273067,
+          "vCores": 267,
           "resourceInformations": {"resourceInformation": [
             {
               "attributes": {},
@@ -125,7 +125,7 @@
               "name": "memory-mb",
               "resourceType": "COUNTABLE",
               "units": "Mi",
-              "value": 273066
+              "value": 273067
             },
             {
               "attributes": {},
@@ -134,7 +134,7 @@
               "name": "vcores",
               "resourceType": "COUNTABLE",
               "units": "",
-              "value": 266
+              "value": 267
             }
           ]}
         },
@@ -311,8 +311,8 @@
         }
       }]},
       "minEffectiveCapacity": {
-        "memory": 273066,
-        "vCores": 266,
+        "memory": 273067,
+        "vCores": 267,
         "resourceInformations": {"resourceInformation": [
           {
             "attributes": {},
@@ -321,7 +321,7 @@
             "name": "memory-mb",
             "resourceType": "COUNTABLE",
             "units": "Mi",
-            "value": 273066
+            "value": 273067
           },
           {
             "attributes": {},
@@ -330,7 +330,7 @@
             "name": "vcores",
             "resourceType": "COUNTABLE",
             "units": "",
-            "value": 266
+            "value": 267
           }
         ]}
       },
@@ -1085,8 +1085,8 @@
           ]}
         },
         "effectiveMinResource": {
-          "memory": 273066,
-          "vCores": 266,
+          "memory": 273067,
+          "vCores": 267,
           "resourceInformations": {"resourceInformation": [
             {
               "attributes": {},
@@ -1095,7 +1095,7 @@
               "name": "memory-mb",
               "resourceType": "COUNTABLE",
               "units": "Mi",
-              "value": 273066
+              "value": 273067
             },
             {
               "attributes": {},
@@ -1104,7 +1104,7 @@
               "name": "vcores",
               "resourceType": "COUNTABLE",
               "units": "",
-              "value": 266
+              "value": 267
             }
           ]}
         },
@@ -1281,8 +1281,8 @@
         }
       }]},
       "minEffectiveCapacity": {
-        "memory": 273066,
-        "vCores": 266,
+        "memory": 273067,
+        "vCores": 267,
         "resourceInformations": {"resourceInformation": [
           {
             "attributes": {},
@@ -1291,7 +1291,7 @@
             "name": "memory-mb",
             "resourceType": "COUNTABLE",
             "units": "Mi",
-            "value": 273066
+            "value": 273067
           },
           {
             "attributes": {},
@@ -1300,7 +1300,7 @@
             "name": "vcores",
             "resourceType": "COUNTABLE",
             "units": "",
-            "value": 266
+            "value": 267
           }
         ]}
       },
