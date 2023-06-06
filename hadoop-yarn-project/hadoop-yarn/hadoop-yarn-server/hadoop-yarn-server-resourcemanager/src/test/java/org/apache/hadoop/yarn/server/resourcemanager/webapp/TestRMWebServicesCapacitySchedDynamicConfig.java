@@ -174,6 +174,8 @@ public class TestRMWebServicesCapacitySchedDynamicConfig extends
   public void testSchedulerAbsolute1()
       throws Exception {
     Map<String, String> conf = new HashMap<>();
+    conf.put("yarn.scheduler.capacity.resource-calculator", "org.apache.hadoop.yarn.util.resource.DominantResourceCalculator");
+    conf.put("yarn.scheduler.capacity.root.queues", "queue1, queue2");
     conf.put("yarn.scheduler.capacity.root.queues", "queue1, queue2");
     conf.put("yarn.scheduler.capacity.root.capacity", "[memory=6144,vcores=6]");
     conf.put("yarn.scheduler.capacity.root.queue1.capacity", "[memory=1024,vcores=2]");
