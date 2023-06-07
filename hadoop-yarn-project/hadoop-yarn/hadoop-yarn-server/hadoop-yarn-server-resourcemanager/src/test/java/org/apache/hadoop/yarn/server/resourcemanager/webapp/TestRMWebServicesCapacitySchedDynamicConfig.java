@@ -40,6 +40,7 @@ import org.apache.hadoop.yarn.webapp.GuiceServletConfig;
 import org.apache.hadoop.yarn.webapp.JerseyTestBase;
 import org.junit.Test;
 
+import static org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacitySchedulerConfigGeneratorForTest.createConfiguration;
 import static org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacitySchedulerTestUtilities.GB;
 import static org.apache.hadoop.yarn.server.resourcemanager.webapp.TestRMWebServicesCapacitySched.assertJsonResponse;
 import static org.apache.hadoop.yarn.server.resourcemanager.webapp.TestRMWebServicesCapacitySched.createMockRM;
@@ -167,6 +168,53 @@ public class TestRMWebServicesCapacitySchedDynamicConfig extends
 
     assertJsonResponse(sendRequest(),
         "webapp/scheduler-response-WeightModeWithAutoCreatedQueues-After.json");
+  }
+
+  @Test
+  public void testDefaultVSDominantResourceCalculator()
+      throws Exception {
+    Map<String, String> conf = new HashMap<>();
+    boolean dominant = false; // TODO change this for test
+    if (dominant) {
+      conf.put("yarn.scheduler.capacity.resource-calculator", "org.apache.hadoop.yarn.util.resource.DominantResourceCalculator");
+    }
+    conf.put("yarn.scheduler.capacity.legacy-queue-mode.enabled", "true");
+    conf.put("yarn.scheduler.capacity.root.queues", "a, b");
+    conf.put("yarn.scheduler.capacity.root.a.capacity", "[memory=4096,vcores=8]");
+    conf.put("yarn.scheduler.capacity.root.b.capacity", "[memory=12288,vcores=8]");
+    conf.put("yarn.scheduler.capacity.root.b.queues", "b1, b2");
+    conf.put("yarn.scheduler.capacity.root.b.b1.capacity", "[memory=3072,vcores=6]");
+    conf.put("yarn.scheduler.capacity.root.b.b2.capacity", "[memory=9216,vcores=2]");
+
+  /*
+                    DefaultResourceCalculator               DominantResourceCalculator
+                    capacity absoluteCapacity maxApps       capacity absoluteCapacity maxApps
+   root.a           0.25     0.25             2500          0.5      0.5              5000
+   root.b           0.75     0.75                           0.75     0.75
+   root.b.b1        0.25     0.1875           1875          0.5      0.375            3750
+   root.b.b2        0.75     0.5625           5625          0.75     0.5625           5625
+
+  I don't see any reason why the ResourceCalculator abstraction should affect the capacity/absoluteCapacity or any other property of the queue queues in the hierarchy.
+  The cluster resource should be shared amongst the queues based on the individual resource types. The effectiveMin/Max resource should be a concrete value for each
+  resource type. The absoluteCapacity could be calculated based only one resource type (memory), and every other calculated property should be based on that.
+
+  The DominantResourceCalculator is useful when the whole cluster is utilised by apps with multiple users (https://cs.stanford.edu/~matei/papers/2011/nsdi_drf.pdf)
+  Hopefully these are based on the effectiveMin/Max resources and the requested resources and no calculated property is involved (e.g.: absoluteCapacity/capacity).
+
+  */
+
+
+    Configuration configuration = createConfiguration(conf);
+    initResourceManager(configuration);
+    rm.registerNode("h1:1234", 16384, 16);
+
+    if (dominant) {
+      assertJsonResponse(sendRequest(),
+          "webapp/scheduler-response-dominant-rc.json");
+    } else {
+      assertJsonResponse(sendRequest(),
+          "webapp/scheduler-response-default-rc.json");
+    }
   }
 
   private void initAutoQueueHandler(int nodeMemory) throws Exception {
