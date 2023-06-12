@@ -40,6 +40,7 @@ import org.apache.hadoop.yarn.webapp.GuiceServletConfig;
 import org.apache.hadoop.yarn.webapp.JerseyTestBase;
 import org.junit.Test;
 
+import static org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacitySchedulerConfigGeneratorForTest.createConfiguration;
 import static org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacitySchedulerTestUtilities.GB;
 import static org.apache.hadoop.yarn.server.resourcemanager.webapp.TestRMWebServicesCapacitySched.assertJsonResponse;
 import static org.apache.hadoop.yarn.server.resourcemanager.webapp.TestRMWebServicesCapacitySched.createMockRM;
@@ -120,6 +121,24 @@ public class TestRMWebServicesCapacitySchedDynamicConfig extends
      */
     assertJsonResponse(sendRequest(), "webapp/scheduler-response-AbsoluteMode.json");
   }
+
+  @Test
+  public void testSchedulerPercentageAndAbsolute()
+      throws Exception {
+    Map<String, String> conf = new HashMap<>();
+    conf.put("yarn.scheduler.capacity.legacy-queue-mode.enabled", "false");
+    conf.put("yarn.scheduler.capacity.root.queues", "default, queue1, queue2");
+    conf.put("yarn.scheduler.capacity.root.default.capacity", "50");
+    conf.put("yarn.scheduler.capacity.root.queue1.capacity", "50");
+    conf.put("yarn.scheduler.capacity.root.queue2.capacity", "[memory=2048,vcores=2]");
+    Configuration configuration = createConfiguration(conf);
+
+    initResourceManager(configuration);
+    rm.registerNode("h1:1234", 8192, 8);
+
+    assertJsonResponse(sendRequest(), "webapp/mixed-absolute-and-percentage.json");
+  }
+
 
   @Test
   public void testSchedulerResponseWeightMode()
