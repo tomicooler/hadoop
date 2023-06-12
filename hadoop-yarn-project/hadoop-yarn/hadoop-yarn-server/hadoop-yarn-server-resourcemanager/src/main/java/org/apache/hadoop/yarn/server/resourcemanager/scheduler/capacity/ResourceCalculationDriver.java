@@ -254,8 +254,6 @@ public class ResourceCalculationDriver {
     AbstractQueueCapacityCalculator maximumCapacityCalculator = calculators.get(
         maximumCapacityVectorEntry.getVectorResourceType());
 
-    boolean isabsoluthack = maximumCapacityCalculator instanceof AbsoluteResourceCapacityCalculator;
-
     double minimumResource =
         calculators.get(context.getCapacityType()).calculateMinimumResource(this, context, label);
     double maximumResource = maximumCapacityCalculator.calculateMaximumResource(this, context,
@@ -266,7 +264,7 @@ public class ResourceCalculationDriver {
         maximumCapacityVectorEntry);
     Pair<Double, Double> resources = validateCalculatedResources(context, label,
         new ImmutablePair<>(
-        minimumResource, maximumResource), isabsoluthack);
+        minimumResource, maximumResource));
     minimumResource = resources.getLeft();
     maximumResource = resources.getRight();
 
@@ -279,7 +277,7 @@ public class ResourceCalculationDriver {
   }
 
   private Pair<Double, Double> validateCalculatedResources(CalculationContext context,
-      String label, Pair<Double, Double> calculatedResources, boolean isabsolutehack) {
+      String label, Pair<Double, Double> calculatedResources) {
     double minimumResource = calculatedResources.getLeft();
     long minimumMemoryResource =
         context.getQueue().getQueueResourceQuotas().getEffectiveMinResource(label).getMemorySize();
@@ -307,24 +305,20 @@ public class ResourceCalculationDriver {
       updateContext.addUpdateWarning(QueueUpdateWarningType.QUEUE_EXCEEDS_MAX_RESOURCE.ofQueue(
           context.getQueue().getQueuePath()));
 
-      if (!isabsolutehack) {
-        minimumResource = maximumResource;
-      }
+      minimumResource = maximumResource;
     }
 
     if (minimumResource > remainingResourceUnderParent) {
-      if (!isabsolutehack) {
-        // Legacy auto queues are assigned a zero resource if not enough resource is left
-        if (queue instanceof ManagedParentQueue) {
-          minimumResource = 0;
-        } else {
-          updateContext.addUpdateWarning(
-              QueueUpdateWarningType.QUEUE_OVERUTILIZED.ofQueue(
-                  context.getQueue().getQueuePath()).withInfo(
-                      "Resource name: " + context.getResourceName() +
-                          " resource value: " + minimumResource));
-          minimumResource = remainingResourceUnderParent;
-        }
+      // Legacy auto queues are assigned a zero resource if not enough resource is left
+      if (queue instanceof ManagedParentQueue) {
+        minimumResource = 0;
+      } else {
+        updateContext.addUpdateWarning(
+            QueueUpdateWarningType.QUEUE_OVERUTILIZED.ofQueue(
+                context.getQueue().getQueuePath()).withInfo(
+                    "Resource name: " + context.getResourceName() +
+                        " resource value: " + minimumResource));
+        minimumResource = remainingResourceUnderParent;
       }
     }
 
