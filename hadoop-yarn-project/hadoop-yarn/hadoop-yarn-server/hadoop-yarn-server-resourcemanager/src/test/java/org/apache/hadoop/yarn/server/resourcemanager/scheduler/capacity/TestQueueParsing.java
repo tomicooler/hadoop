@@ -45,6 +45,9 @@ import org.junit.Test;
 
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableSet;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assume.assumeThat;
+
 public class TestQueueParsing {
 
   private static final Logger LOG =
@@ -950,6 +953,10 @@ public class TestQueueParsing {
     YarnConfiguration conf = new YarnConfiguration();
     CapacitySchedulerConfiguration csConf =
         new CapacitySchedulerConfiguration(conf);
+
+    // If the new queue mode is used it's allowed to leave some of the resources of a parent queue unallocated
+    assumeThat(csConf.isLegacyQueueMode(), is(true));
+
     setupQueueConfiguration(csConf);
     csConf.setCapacity(CapacitySchedulerConfiguration.ROOT + ".c.c2", 5);
 
@@ -980,6 +987,10 @@ public class TestQueueParsing {
     YarnConfiguration conf = new YarnConfiguration();
     CapacitySchedulerConfiguration csConf =
         new CapacitySchedulerConfiguration(conf);
+
+    // If the new queue mode is used it's allowed to leave some of the resources of a parent queue unallocated
+    assumeThat(csConf.isLegacyQueueMode(), is(true));
+
     setupQueueConfigurationWithLabels(csConf);
     csConf.setCapacityByLabel(CapacitySchedulerConfiguration.ROOT + ".b.b3",
         "red", 24);
@@ -1011,6 +1022,10 @@ public class TestQueueParsing {
     YarnConfiguration conf = new YarnConfiguration();
     CapacitySchedulerConfiguration csConf =
         new CapacitySchedulerConfiguration(conf);
+
+    // If the new queue mode is used it's allowed to leave some of the resources of a parent queue unallocated
+    assumeThat(csConf.isLegacyQueueMode(), is(true));
+
     setupQueueConfigurationWithLabels(csConf);
     csConf.setCapacityByLabel(CapacitySchedulerConfiguration.ROOT + ".b.b3",
         "red", 24);
@@ -1075,6 +1090,9 @@ public class TestQueueParsing {
         ResourceScheduler.class);
     CapacitySchedulerConfiguration conf =
         new CapacitySchedulerConfiguration(config);
+
+    // If the new queue mode is used it's allowed to leave some of the resources of a parent queue unallocated
+    assumeThat(conf.isLegacyQueueMode(), is(true));
 
     // Define top-level queues
     conf.setQueues(CapacitySchedulerConfiguration.ROOT, new String[] { "a" });
