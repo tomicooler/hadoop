@@ -40,6 +40,17 @@ import static org.apache.hadoop.yarn.server.resourcemanager.webapp.TestRMWebServ
 import static org.apache.hadoop.yarn.server.resourcemanager.webapp.TestRMWebServicesCapacitySched.createMockRM;
 import static org.apache.hadoop.yarn.server.resourcemanager.webapp.TestRMWebServicesCapacitySched.createWebAppDescriptor;
 
+/**
+ * The queues are configured in each test so that the effectiveMinResource is the same.
+ * This makes it possible to compare the JSONs among the tests.
+ *                                         EffectiveMin (32GB 32VCores)
+ *     root.default              4/32      [memory=4096,    vcores=4]
+ *     root.test_1              16/32      [memory=16384,   vcores=16]
+ *     root.test_1.test_1_1        2/16      [memory=2048,  vcores=2]
+ *     root.test_1.test_1_2        2/16      [memory=2048,  vcores=2]
+ *     root.test_1.test_1_3       12/16      [memory=12288, vcores=12]
+ *     root.test_2              12/32      [memory=12288,   vcores=12]
+ */
 public class TestRMWebServicesCapacitySchedulerMixedMode extends JerseyTestBase {
 
   private static final String EXPECTED_FILE_TMPL = "webapp/mixed-%s-%d.json";
@@ -49,17 +60,6 @@ public class TestRMWebServicesCapacitySchedulerMixedMode extends JerseyTestBase 
   public TestRMWebServicesCapacitySchedulerMixedMode() {
     super(createWebAppDescriptor());
   }
-
-
-  /*
-   * root.default                 1/8       [memory=4096,   vcores=4]  [memory=1w, vcores=1w] [memory=12.5%, vcores=12.5%]
-   * root.test_1                  4/8       [memory=16384, vcores=16]  [memory=4w, vcores=4w] [memory=50%,   vcores=50%]
-   * root.test_1.test_1_1           2/8       [memory=2048, vcores=2]  [memory=2w, vcores=2w] [memory=25%,   vcores=25%]
-   * root.test_1.test_1_2           2/8       [memory=2048, vcores=2]  [memory=2w, vcores=2w] [memory=25%,   vcores=25%]
-   * root.test_1.test_1_3           4/8       [memory=8192, vcores=8]  [memory=4w, vcores=4w] [memory=50%,   vcores=50%]
-   * root.test_2                  2/8       [memory=8192,   vcores=8]  [memory=2w, vcores=2w] [memory=25%,   vcores=25%]
-   * 32GB 32Core
-   */
 
 
   @Test
@@ -75,17 +75,6 @@ public class TestRMWebServicesCapacitySchedulerMixedMode extends JerseyTestBase 
     conf.put("yarn.scheduler.capacity.root.test_1.test_1_1.capacity", "[memory=2048, vcores=2]");
     conf.put("yarn.scheduler.capacity.root.test_1.test_1_2.capacity", "[memory=2048, vcores=2]");
     conf.put("yarn.scheduler.capacity.root.test_1.test_1_3.capacity", "100");
-
-    // todo absoluteCapacity calc
-
-    /*                          effectiveMin (32GB 32VCores)
-     * root.default             [memory=4096,  vcores=4]
-     * root.test_1              [memory=50%,   vcores=50%]
-     * root.test_1.test_1_1     [memory=2048,  vcores=2]    todo why am limit is 4096, 1 ?
-     * root.test_1.test_1_2     [memory=2048,  vcores=2]
-     * root.test_1.test_1_3     [memory=12288, vcores=12]
-     * root.test_2              [memory=12288, vcores=12]
-     */
     runTest(createConfiguration(conf));
   }
 
@@ -102,17 +91,6 @@ public class TestRMWebServicesCapacitySchedulerMixedMode extends JerseyTestBase 
     conf.put("yarn.scheduler.capacity.root.test_1.test_1_1.capacity", "[memory=2048, vcores=2]");
     conf.put("yarn.scheduler.capacity.root.test_1.test_1_2.capacity", "[memory=2048, vcores=2]");
     conf.put("yarn.scheduler.capacity.root.test_1.test_1_3.capacity", "1w");
-
-    // todo absoluteCapacity calc
-
-    /*                          effectiveMin (32GB 32VCores)
-     * root.default             [memory=4096,  vcores=4]
-     * root.test_1              [memory=50%,   vcores=50%]
-     * root.test_1.test_1_1     [memory=2048,  vcores=2]    todo why am limit is 4096, 1 ?
-     * root.test_1.test_1_2     [memory=2048,  vcores=2]
-     * root.test_1.test_1_3     [memory=12288, vcores=12]
-     * root.test_2              [memory=12288, vcores=12]
-     */
     runTest(createConfiguration(conf));
   }
 
@@ -129,17 +107,22 @@ public class TestRMWebServicesCapacitySchedulerMixedMode extends JerseyTestBase 
     conf.put("yarn.scheduler.capacity.root.test_1.test_1_1.capacity", "50");
     conf.put("yarn.scheduler.capacity.root.test_1.test_1_2.capacity", "1w");
     conf.put("yarn.scheduler.capacity.root.test_1.test_1_3.capacity", "[memory=12288, vcores=12]");
+    runTest(createConfiguration(conf));
+  }
 
-    // todo absoluteCapacity calc
-
-    /*                          effectiveMin (32GB 32VCores)
-     * root.default             [memory=4096,  vcores=4]
-     * root.test_1              [memory=50%,   vcores=50%]
-     * root.test_1.test_1_1     [memory=2048,  vcores=2]    todo why am limit is 4096, 1 ?
-     * root.test_1.test_1_2     [memory=2048,  vcores=2]
-     * root.test_1.test_1_3     [memory=12288, vcores=12]
-     * root.test_2              [memory=12288, vcores=12]
-     */
+  @Test
+  public void testSchedulerAbsoluteAndPercentageAndWeightMixed()
+      throws Exception {
+    Map<String, String> conf = new HashMap<>();
+    conf.put("yarn.scheduler.capacity.legacy-queue-mode.enabled", "false");
+    conf.put("yarn.scheduler.capacity.root.queues", "default, test_1, test_2");
+    conf.put("yarn.scheduler.capacity.root.test_1.queues", "test_1_1, test_1_2, test_1_3");
+    conf.put("yarn.scheduler.capacity.root.default.capacity", "[memory=1w, vcores=4]");
+    conf.put("yarn.scheduler.capacity.root.test_1.capacity", "[memory=16384, vcores=100%]");
+    conf.put("yarn.scheduler.capacity.root.test_2.capacity", "[memory=3w, vcores=12]");
+    conf.put("yarn.scheduler.capacity.root.test_1.test_1_1.capacity", "[memory=1w, vcores=1w]");
+    conf.put("yarn.scheduler.capacity.root.test_1.test_1_2.capacity", "[memory=50%, vcores=2]");
+    conf.put("yarn.scheduler.capacity.root.test_1.test_1_3.capacity", "[memory=12288, vcores=86%]");
     runTest(createConfiguration(conf));
   }
 
