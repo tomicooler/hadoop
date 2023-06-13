@@ -68,6 +68,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
@@ -358,7 +359,6 @@ public abstract class AbstractCSQueue implements CSQueue {
       // Initialize the queue capacities
       setupConfigurableCapacities();
       updateAbsoluteCapacities();
-      updateCapacityConfigType();
 
       // Fetch minimum/maximum resource limits for this queue if
       // configured
@@ -387,6 +387,9 @@ public abstract class AbstractCSQueue implements CSQueue {
           .parseConfiguredMaximumCapacityVector(queuePath.getFullPath(),
               this.queueNodeLabelsSettings.getConfiguredNodeLabels(),
               QueueCapacityVector.newInstance());
+
+      updateCapacityConfigType();
+
       // Update metrics
       CSQueueUtils.updateQueueStatistics(resourceCalculator, clusterResource,
           this, labelManager, null);
@@ -480,9 +483,26 @@ public abstract class AbstractCSQueue implements CSQueue {
       LOG.debug("capacityConfigType is '{}' for queue {}",
           capacityConfigType, getQueuePath());
 
-      CapacityConfigType localType = checkConfigTypeIsAbsoluteResource(
-          getQueuePath(), label) ? CapacityConfigType.ABSOLUTE_RESOURCE
-          : CapacityConfigType.PERCENTAGE;
+      CapacityConfigType localType = CapacityConfigType.NONE;
+
+      // TODO check the usage of this
+      final Set<QueueCapacityVector.ResourceUnitCapacityType> definedCapacityTypes =
+          getConfiguredCapacityVector(label).getDefinedCapacityTypes();
+      System.out.println("tomi DCT " + queuePath + " " + definedCapacityTypes);
+      if (definedCapacityTypes.size() == 1) {
+        QueueCapacityVector.ResourceUnitCapacityType next = definedCapacityTypes.iterator().next();
+        if (Objects.requireNonNull(next) == PERCENTAGE) {
+          localType = CapacityConfigType.PERCENTAGE;
+        } else if (next == QueueCapacityVector.ResourceUnitCapacityType.ABSOLUTE) {
+          localType = CapacityConfigType.ABSOLUTE_RESOURCE;
+        } else if (next == QueueCapacityVector.ResourceUnitCapacityType.WEIGHT) {
+          localType = CapacityConfigType.PERCENTAGE;
+        }
+      } else { // Mixed type
+        localType = CapacityConfigType.PERCENTAGE;
+      }
+
+      System.out.println("tomi DCT2 " + queuePath + " " + localType);
 
       if (this.capacityConfigType.equals(CapacityConfigType.NONE)) {
         this.capacityConfigType = localType;
