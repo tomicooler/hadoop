@@ -16,7 +16,7 @@
           {
             "type": "capacitySchedulerLeafQueueInfo",
             "queuePath": "root.default",
-            "capacity": 25,
+            "capacity": 12.5,
             "usedCapacity": 0,
             "maxCapacity": 100,
             "absoluteCapacity": 12.5,
@@ -63,7 +63,7 @@
             "capacities": {
               "queueCapacitiesByPartition": [{
                 "partitionName": "",
-                "capacity": 25,
+                "capacity": 12.5,
                 "usedCapacity": 0,
                 "maxCapacity": 100,
                 "absoluteCapacity": 12.5,
@@ -541,7 +541,7 @@
           {
             "type": "capacitySchedulerLeafQueueInfo",
             "queuePath": "root.test_2",
-            "capacity": 75,
+            "capacity": 37.5,
             "usedCapacity": 0,
             "maxCapacity": 100,
             "absoluteCapacity": 37.5,
@@ -588,7 +588,7 @@
             "capacities": {
               "queueCapacitiesByPartition": [{
                 "partitionName": "",
-                "capacity": 75,
+                "capacity": 37.5,
                 "usedCapacity": 0,
                 "maxCapacity": 100,
                 "absoluteCapacity": 37.5,
@@ -2133,7 +2133,7 @@
                 {
                   "type": "capacitySchedulerLeafQueueInfo",
                   "queuePath": "root.test_1.test_1_3",
-                  "capacity": 100,
+                  "capacity": 75,
                   "usedCapacity": 0,
                   "maxCapacity": 100,
                   "absoluteCapacity": 37.5,
@@ -2180,7 +2180,7 @@
                   "capacities": {
                     "queueCapacitiesByPartition": [{
                       "partitionName": "",
-                      "capacity": 100,
+                      "capacity": 75,
                       "usedCapacity": 0,
                       "maxCapacity": 100,
                       "absoluteCapacity": 37.5,

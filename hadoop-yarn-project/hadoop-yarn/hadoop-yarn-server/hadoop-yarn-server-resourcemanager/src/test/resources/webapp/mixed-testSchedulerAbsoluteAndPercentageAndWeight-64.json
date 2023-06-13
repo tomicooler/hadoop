@@ -16,14 +16,14 @@
           {
             "type": "capacitySchedulerLeafQueueInfo",
             "queuePath": "root.default",
-            "capacity": 0,
+            "capacity": 18.75,
             "usedCapacity": 0,
             "maxCapacity": 100,
             "absoluteCapacity": 18.75,
             "absoluteMaxCapacity": 100,
             "absoluteUsedCapacity": 0,
             "weight": 1,
-            "normalizedWeight": 1,
+            "normalizedWeight": 0,
             "numApplications": 0,
             "maxParallelApps": 2147483647,
             "queueName": "default",
@@ -63,7 +63,7 @@
             "capacities": {
               "queueCapacitiesByPartition": [{
                 "partitionName": "",
-                "capacity": 0,
+                "capacity": 18.75,
                 "usedCapacity": 0,
                 "maxCapacity": 100,
                 "absoluteCapacity": 18.75,
@@ -71,7 +71,7 @@
                 "absoluteMaxCapacity": 100,
                 "maxAMLimitPercentage": 10,
                 "weight": 1,
-                "normalizedWeight": 1,
+                "normalizedWeight": 0,
                 "configuredMinResource": {
                   "memory": 0,
                   "vCores": 0,
@@ -541,7 +541,7 @@
           {
             "type": "capacitySchedulerLeafQueueInfo",
             "queuePath": "root.test_2",
-            "capacity": 75,
+            "capacity": 56.25,
             "usedCapacity": 0,
             "maxCapacity": 100,
             "absoluteCapacity": 56.25,
@@ -588,7 +588,7 @@
             "capacities": {
               "queueCapacitiesByPartition": [{
                 "partitionName": "",
-                "capacity": 75,
+                "capacity": 56.25,
                 "usedCapacity": 0,
                 "maxCapacity": 100,
                 "absoluteCapacity": 56.25,
@@ -1083,7 +1083,7 @@
                 {
                   "type": "capacitySchedulerLeafQueueInfo",
                   "queuePath": "root.test_1.test_1_1",
-                  "capacity": 50,
+                  "capacity": 12.5,
                   "usedCapacity": 0,
                   "maxCapacity": 100,
                   "absoluteCapacity": 3.125,
@@ -1130,7 +1130,7 @@
                   "capacities": {
                     "queueCapacitiesByPartition": [{
                       "partitionName": "",
-                      "capacity": 50,
+                      "capacity": 12.5,
                       "usedCapacity": 0,
                       "maxCapacity": 100,
                       "absoluteCapacity": 3.125,
@@ -1608,14 +1608,14 @@
                 {
                   "type": "capacitySchedulerLeafQueueInfo",
                   "queuePath": "root.test_1.test_1_2",
-                  "capacity": 0,
+                  "capacity": 12.5,
                   "usedCapacity": 0,
                   "maxCapacity": 100,
                   "absoluteCapacity": 3.125,
                   "absoluteMaxCapacity": 100,
                   "absoluteUsedCapacity": 0,
                   "weight": 1,
-                  "normalizedWeight": 1,
+                  "normalizedWeight": 0,
                   "numApplications": 0,
                   "maxParallelApps": 2147483647,
                   "queueName": "test_1_2",
@@ -1655,7 +1655,7 @@
                   "capacities": {
                     "queueCapacitiesByPartition": [{
                       "partitionName": "",
-                      "capacity": 0,
+                      "capacity": 12.5,
                       "usedCapacity": 0,
                       "maxCapacity": 100,
                       "absoluteCapacity": 3.125,
@@ -1663,7 +1663,7 @@
                       "absoluteMaxCapacity": 100,
                       "maxAMLimitPercentage": 10,
                       "weight": 1,
-                      "normalizedWeight": 1,
+                      "normalizedWeight": 0,
                       "configuredMinResource": {
                         "memory": 0,
                         "vCores": 0,

@@ -70,7 +70,7 @@ public class TestReservationQueue {
     RMNodeLabelsManager mgr = new NullRMNodeLabelsManager();
     mgr.init(csConf);
     when(csQm.getQueueCapacityHandler()).thenReturn(
-        new CapacitySchedulerQueueCapacityHandler(mgr));
+        new CapacitySchedulerQueueCapacityHandler(mgr, csConf));
     when(csContext.getConfiguration()).thenReturn(csConf);
     when(csContext.getCapacitySchedulerQueueManager()).thenReturn(csQm);
     when(csContext.getConf()).thenReturn(conf);
