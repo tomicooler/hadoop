@@ -43,13 +43,13 @@ import static org.apache.hadoop.yarn.server.resourcemanager.webapp.TestRMWebServ
 /**
  * The queues are configured in each test so that the effectiveMinResource is the same.
  * This makes it possible to compare the JSONs among the tests.
- *                                         EffectiveMin (32GB 32VCores)
- *     root.default              4/32      [memory=4096,    vcores=4]
+ *                                         EffectiveMin (32GB 32VCores)     AbsoluteCapacity
+ *     root.default              4/32      [memory=4096,    vcores=4]       12.5%
  *     root.test_1              16/32      [memory=16384,   vcores=16]
- *     root.test_1.test_1_1        2/16      [memory=2048,  vcores=2]
- *     root.test_1.test_1_2        2/16      [memory=2048,  vcores=2]
- *     root.test_1.test_1_3       12/16      [memory=12288, vcores=12]
- *     root.test_2              12/32      [memory=12288,   vcores=12]
+ *     root.test_1.test_1_1        2/16      [memory=2048,  vcores=2]       6.25%
+ *     root.test_1.test_1_2        2/16      [memory=2048,  vcores=2]       6.25%
+ *     root.test_1.test_1_3       12/16      [memory=12288, vcores=12]      37.5%
+ *     root.test_2              12/32      [memory=12288,   vcores=12]      37.5%
  */
 public class TestRMWebServicesCapacitySchedulerMixedMode extends JerseyTestBase {
 

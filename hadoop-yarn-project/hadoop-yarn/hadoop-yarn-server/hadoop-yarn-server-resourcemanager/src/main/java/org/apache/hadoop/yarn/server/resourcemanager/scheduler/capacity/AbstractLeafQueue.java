@@ -1947,6 +1947,27 @@ public class AbstractLeafQueue extends AbstractCSQueue {
 
     LOG.error("tomi ALQ refreshAfterResourceCalculation {}", queuePath);
 
+    for (String label : queueCapacities.getExistingNodeLabels()) {
+      Resource effectiveCapacity = getEffectiveCapacity(label);
+
+      if (effectiveCapacity.getMemorySize() == 0) {
+        break;
+      }
+
+      Resource rootEffectiveCapacity = effectiveCapacity;
+      CSQueue parent = getParent();
+      while (parent != null) {
+        rootEffectiveCapacity = parent.getEffectiveCapacity(label);
+        parent = parent.getParent();
+      }
+      setAbsoluteCapacity(label,
+          (float) effectiveCapacity.getMemorySize() /
+              rootEffectiveCapacity.getMemorySize());
+      LOG.error("tomi ALQ refreshAfterResourceCalculation absoluteCapacity label='{}' {} {} = {}", label, effectiveCapacity.getMemorySize(), rootEffectiveCapacity.getMemorySize(),
+          ((float) effectiveCapacity.getMemorySize() /
+          rootEffectiveCapacity.getMemorySize()));
+    }
+
     lastClusterResource = clusterResource;
     // Update maximum applications for the queue and for users
     updateMaximumApplications();
