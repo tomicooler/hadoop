@@ -147,7 +147,6 @@ public class CapacitySchedulerQueueCapacityHandler {
     queue.getWriteLock().lock();
     try {
       for (String label : queue.getConfiguredNodeLabels()) {
-        
         if (!isLegacyQueueMode) {
           // Post update capacities based on the calculated effective resource values
           setQueueCapacities(resourceCalculationDriver.getUpdateContext().getUpdatedClusterResource(
