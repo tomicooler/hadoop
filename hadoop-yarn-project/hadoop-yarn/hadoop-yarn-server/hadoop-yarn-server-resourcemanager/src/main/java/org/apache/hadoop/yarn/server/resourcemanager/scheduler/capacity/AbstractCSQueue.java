@@ -76,6 +76,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 import static org.apache.hadoop.yarn.nodelabels.CommonNodeLabelsManager.NO_LABEL;
 import static org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacitySchedulerConfiguration.DOT;
 import static org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.QueueCapacityVector.ResourceUnitCapacityType.PERCENTAGE;
+import static org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.QueueCapacityVector.ResourceUnitCapacityType.WEIGHT;
 
 /**
  * Provides implementation of {@code CSQueue} methods common for every queue class in Capacity
@@ -388,6 +389,22 @@ public abstract class AbstractCSQueue implements CSQueue {
               this.queueNodeLabelsSettings.getConfiguredNodeLabels(),
               QueueCapacityVector.newInstance());
 
+      // Re-adjust weight when mixed capacity type is used. 5w == [memory=5w, vcores=5w]
+      for (final String label : queueNodeLabelsSettings.getConfiguredNodeLabels()) {
+        final QueueCapacityVector capacityVector = configuredCapacityVectors.get(label);
+        final Set<QueueCapacityVector.ResourceUnitCapacityType> definedCapacityTypes =
+            capacityVector.getDefinedCapacityTypes();
+        if (definedCapacityTypes.size() == 1 && definedCapacityTypes.iterator().next() == WEIGHT) {
+          Set<Double> weights = new HashSet<>();
+          for (String resourceName : capacityVector.getResourceNames()) {
+            weights.add(capacityVector.getResource(resourceName).getResourceValue());
+          }
+          if (weights.size() == 1) {
+            queueCapacities.setWeight(label, weights.iterator().next().floatValue());
+          }
+        }
+      }
+
       updateCapacityConfigType();
 
       // Update metrics
@@ -495,7 +512,7 @@ public abstract class AbstractCSQueue implements CSQueue {
           localType = CapacityConfigType.PERCENTAGE;
         } else if (next == QueueCapacityVector.ResourceUnitCapacityType.ABSOLUTE) {
           localType = CapacityConfigType.ABSOLUTE_RESOURCE;
-        } else if (next == QueueCapacityVector.ResourceUnitCapacityType.WEIGHT) {
+        } else if (next == WEIGHT) {
           localType = CapacityConfigType.PERCENTAGE;
         }
       } else { // Mixed type

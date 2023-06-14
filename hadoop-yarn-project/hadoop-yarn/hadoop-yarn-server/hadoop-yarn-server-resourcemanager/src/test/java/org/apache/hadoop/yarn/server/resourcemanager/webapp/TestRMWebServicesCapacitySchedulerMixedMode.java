@@ -110,7 +110,6 @@ public class TestRMWebServicesCapacitySchedulerMixedMode extends JerseyTestBase 
     runTest(createConfiguration(conf));
   }
 
-  /*
   @Test
   public void testSchedulerAbsoluteAndWeightUsingCapacityVector()
       throws Exception {
@@ -126,7 +125,6 @@ public class TestRMWebServicesCapacitySchedulerMixedMode extends JerseyTestBase 
     conf.put("yarn.scheduler.capacity.root.test_1.test_1_3.capacity", "[memory=1w, vcores=1w]");
     runTest("testSchedulerAbsoluteAndWeight", createConfiguration(conf));
   }
-   */
 
   @Test
   public void testSchedulerAbsoluteAndPercentageAndWeight()
@@ -144,7 +142,6 @@ public class TestRMWebServicesCapacitySchedulerMixedMode extends JerseyTestBase 
     runTest(createConfiguration(conf));
   }
 
-  /*
   @Test
   public void testSchedulerAbsoluteAndPercentageAndWeightUsingCapacityVector()
       throws Exception {
@@ -160,7 +157,6 @@ public class TestRMWebServicesCapacitySchedulerMixedMode extends JerseyTestBase 
     conf.put("yarn.scheduler.capacity.root.test_1.test_1_3.capacity", "[memory=12288, vcores=12]");
     runTest("testSchedulerAbsoluteAndPercentageAndWeight", createConfiguration(conf));
   }
-   */
 
   @Test
   public void testSchedulerAbsoluteAndPercentageAndWeightMixed()
