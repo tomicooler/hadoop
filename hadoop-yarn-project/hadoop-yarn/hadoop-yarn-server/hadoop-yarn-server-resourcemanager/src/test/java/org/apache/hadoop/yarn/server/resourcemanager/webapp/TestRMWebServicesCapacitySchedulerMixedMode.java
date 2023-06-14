@@ -78,7 +78,6 @@ public class TestRMWebServicesCapacitySchedulerMixedMode extends JerseyTestBase 
     runTest(createConfiguration(conf));
   }
 
-  /*
   @Test
   public void testSchedulerAbsoluteAndPercentageUsingCapacityVector()
       throws Exception {
@@ -94,7 +93,6 @@ public class TestRMWebServicesCapacitySchedulerMixedMode extends JerseyTestBase 
     conf.put("yarn.scheduler.capacity.root.test_1.test_1_3.capacity", "[memory=100%, vcores=100%]");
     runTest("testSchedulerAbsoluteAndPercentage", createConfiguration(conf));
   }
-   */
 
   @Test
   public void testSchedulerAbsoluteAndWeight()

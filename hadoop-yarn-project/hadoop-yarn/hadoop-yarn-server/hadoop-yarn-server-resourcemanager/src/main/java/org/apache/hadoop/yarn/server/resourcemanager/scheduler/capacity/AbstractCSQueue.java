@@ -1200,7 +1200,8 @@ public abstract class AbstractCSQueue implements CSQueue {
     }
 
     CSQueueUtils.updateAbsoluteCapacitiesByNodeLabels(queueCapacities,
-        parentQueueCapacities, queueCapacities.getExistingNodeLabels());
+        parentQueueCapacities, queueCapacities.getExistingNodeLabels(),
+        queueContext.getConfiguration().isLegacyQueueMode());
   }
 
   private Resource createNormalizedMinResource(Resource minResource,
