@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -42,7 +43,10 @@ import org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.Capacity
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CSQueue;
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.PlanQueue;
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.QueueCapacities;
+import org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.QueueCapacityVector;
 import org.apache.hadoop.yarn.server.resourcemanager.webapp.dao.helper.CapacitySchedulerInfoHelper;
+
+import static org.apache.hadoop.yarn.nodelabels.CommonNodeLabelsManager.NO_LABEL;
 
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
@@ -87,6 +91,8 @@ public class CapacitySchedulerQueueInfo {
   protected String queueType;
   protected String creationMethod;
   protected String autoCreationEligibility;
+  // todo some adapter to serialize to "key": "value"  (JAXB?)
+  protected Map<String, String> capacityVector = new TreeMap<>();
   protected String defaultNodeLabelExpression;
   protected AutoQueueTemplatePropertiesInfo autoQueueTemplateProperties =
       new AutoQueueTemplatePropertiesInfo();
@@ -181,6 +187,29 @@ public class CapacitySchedulerQueueInfo {
     autoCreateChildQueueEnabled = conf.
         isAutoCreateChildQueueEnabled(queuePath);
     leafQueueTemplate = new LeafQueueTemplateInfo(conf, queuePath);
+
+    // todo we need this in PartitionQueueCapacitiesInfo as well
+    capacityVector = getCapacityVector(q, NO_LABEL);
+  }
+
+  public static Map<String, String> getCapacityVector(CSQueue queue, String label) {
+    Map<String, String> cv = new TreeMap<>();
+    QueueCapacityVector configuredCV = queue.getConfiguredCapacityVector(label);
+    for (String resourceName : configuredCV.getResourceNames()) {
+      QueueCapacityVector.QueueCapacityVectorEntry resource =
+          configuredCV.getResource(resourceName);
+
+      if (resource.getResourceValue() == Math.ceil(resource.getResourceValue())) {
+        cv.put(resourceName,
+            String.format("%d%s", (int) resource.getResourceValue(),
+                resource.getVectorResourceType().getPostfix()));
+      } else {
+        cv.put(resourceName,
+            String.format("%.2f%s", resource.getResourceValue(),
+                resource.getVectorResourceType().getPostfix()));
+      }
+    }
+    return cv;
   }
 
   public static ArrayList<QueueAclInfo> getSortedQueueAclInfoList(
