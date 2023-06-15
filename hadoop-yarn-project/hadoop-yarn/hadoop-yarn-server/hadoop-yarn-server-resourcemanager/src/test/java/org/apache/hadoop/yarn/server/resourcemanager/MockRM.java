@@ -182,6 +182,12 @@ public class MockRM extends ResourceManager {
     disableDrainEventsImplicitly = false;
   }
 
+  public MockRM withResourceStarted(int memory, int vcores) throws Exception {
+    start();
+    registerNode("n0:1234", memory, vcores);
+    return this;
+  }
+
   public class MockRMNullStateStore extends NullRMStateStore {
     @SuppressWarnings("rawtypes")
     @Override

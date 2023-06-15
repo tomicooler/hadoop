@@ -169,7 +169,7 @@ public class TestCapacitySchedulerApps {
     setupQueueConfiguration(conf);
     conf.setClass(YarnConfiguration.RM_SCHEDULER, CapacityScheduler.class,
         ResourceScheduler.class);
-    MockRM rm = new MockRM(conf);
+    MockRM rm = new MockRM(conf).withResourceStarted(64 * GB, 64);
     @SuppressWarnings("unchecked")
     AbstractYarnScheduler<SchedulerApplicationAttempt, SchedulerNode> cs =
         (AbstractYarnScheduler<SchedulerApplicationAttempt, SchedulerNode>) rm
@@ -342,7 +342,7 @@ public class TestCapacitySchedulerApps {
 
   @Test
   public void testMoveAppAmbiguousQueue() throws Exception {
-    MockRM rm = setUpMoveAmbiguousQueue();
+    MockRM rm = setUpMoveAmbiguousQueue().withResourceStarted(64 * GB, 64);
     AbstractYarnScheduler scheduler =
         (AbstractYarnScheduler) rm.getResourceScheduler();
     QueueMetrics metrics = scheduler.getRootQueueMetrics();
@@ -1007,7 +1007,7 @@ public class TestCapacitySchedulerApps {
 
   @Test
   public void testMoveAllApps() throws Exception {
-    MockRM rm = setUpMove();
+    MockRM rm = setUpMove().withResourceStarted(64 * GB, 64);
     AbstractYarnScheduler scheduler =
         (AbstractYarnScheduler) rm.getResourceScheduler();
 
@@ -1088,7 +1088,7 @@ public class TestCapacitySchedulerApps {
 
   @Test
   public void testMoveAllAppsInvalidDestination() throws Exception {
-    MockRM rm = setUpMove();
+    MockRM rm = setUpMove().withResourceStarted(64 * GB, 64);
     ResourceScheduler scheduler = rm.getResourceScheduler();
 
     // submit an app
@@ -1121,7 +1121,7 @@ public class TestCapacitySchedulerApps {
 
   @Test
   public void testMoveAllAppsInvalidSource() throws Exception {
-    MockRM rm = setUpMove();
+    MockRM rm = setUpMove().withResourceStarted(64 * GB, 64);
     ResourceScheduler scheduler = rm.getResourceScheduler();
 
     // submit an app
@@ -1319,8 +1319,7 @@ public class TestCapacitySchedulerApps {
     Configuration conf = new Configuration();
     conf.setClass(YarnConfiguration.RM_SCHEDULER, CapacityScheduler.class,
         ResourceScheduler.class);
-    MockRM rm = new MockRM(getCapacityConfiguration(conf));
-    rm.start();
+    MockRM rm = new MockRM(getCapacityConfiguration(conf)).withResourceStarted(64 * GB, 64);
     CapacityScheduler cs = (CapacityScheduler) rm.getResourceScheduler();
 
     ApplicationId appId = BuilderUtils.newApplicationId(100, 1);
