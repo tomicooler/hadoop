@@ -33,6 +33,7 @@ import static org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.C
 import static org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacitySchedulerQueueHelpers.B3_CAPACITY;
 import static org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacitySchedulerQueueHelpers.B_CAPACITY;
 
+import static org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacitySchedulerTestUtilities.GB;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Arrays;
@@ -96,7 +97,7 @@ public class TestCapacitySchedulerWorkflowPriorityMapping {
 
     mockRM = new MockRM(conf);
     CapacityScheduler cs = (CapacityScheduler) mockRM.getResourceScheduler();
-    mockRM.start();
+    mockRM.withResourceStarted(64 * GB, 64);
     cs.start();
 
     Map<String, Object> expected = ImmutableMap.of(

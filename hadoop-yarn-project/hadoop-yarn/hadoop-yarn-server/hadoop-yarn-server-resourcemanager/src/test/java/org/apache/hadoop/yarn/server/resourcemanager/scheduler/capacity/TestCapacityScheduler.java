@@ -1881,9 +1881,6 @@ public class TestCapacityScheduler {
     LeafQueue qb = (LeafQueue)cs.getQueue("default");
     qb.setUserLimitFactor((float)0.8);
 
-    ApplicationAttemptId appAttemptId = appHelper(rm, cs, 100, 1, "default", "user1");
-    ApplicationAttemptId appAttemptId2 = appHelper(rm, cs, 100, 2, "default", "user2");
-
     // add nodes  to cluster, so cluster have 20GB and 20 vcores
     Resource newResource = Resource.newInstance(10 * GB, 10);
     RMNode node = MockNodes.newNodeInfo(0, newResource, 1, "127.0.0.1");
@@ -1892,6 +1889,9 @@ public class TestCapacityScheduler {
     Resource newResource2 = Resource.newInstance(10 * GB, 10);
     RMNode node2 = MockNodes.newNodeInfo(0, newResource2, 1, "127.0.0.2");
     cs.handle(new NodeAddedSchedulerEvent(node2));
+
+    ApplicationAttemptId appAttemptId = appHelper(rm, cs, 100, 1, "default", "user1");
+    ApplicationAttemptId appAttemptId2 = appHelper(rm, cs, 100, 2, "default", "user2");
 
     FiCaSchedulerApp fiCaApp1 =
             cs.getSchedulerApplications().get(appAttemptId.getApplicationId())
@@ -2437,7 +2437,7 @@ public class TestCapacityScheduler {
         "g:agroup:%user");
 
     MockRM rm = new MockRM(config);
-    rm.start();
+    rm.withResourceStarted(64 * GB, 64);
     CapacityScheduler cs = ((CapacityScheduler) rm.getResourceScheduler());
     cs.start();
 

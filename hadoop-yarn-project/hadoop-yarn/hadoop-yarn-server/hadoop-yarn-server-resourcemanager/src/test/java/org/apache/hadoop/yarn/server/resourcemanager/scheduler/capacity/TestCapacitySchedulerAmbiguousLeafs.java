@@ -30,6 +30,7 @@ import org.junit.Test;
 import java.io.IOException;
 
 import static org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacitySchedulerConfiguration.ROOT;
+import static org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacitySchedulerTestUtilities.GB;
 
 public class TestCapacitySchedulerAmbiguousLeafs {
   /**
@@ -72,6 +73,7 @@ public class TestCapacitySchedulerAmbiguousLeafs {
     conf.setBoolean(YarnConfiguration.YARN_ACL_ENABLE, true);
 
     MockRM rm = new MockRM(conf);
+    rm.withResourceStarted(64 * GB, 64);
     CapacityScheduler cs = (CapacityScheduler)rm.getResourceScheduler();
     CapacitySchedulerConfiguration schedulerConf = cs.getConfiguration();
 

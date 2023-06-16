@@ -5138,8 +5138,6 @@ public class TestLeafQueue {
       assertEquals(0, conf.size());
       conf.setNodeLocalityDelay(60);
 
-      Resource clusterResource =
-          Resources.createResource(0, 0);
       csConf.setQueues(ROOT, new String[] {leafQueueName, B});
       csConf.setCapacity(ROOT + DOT + leafQueueName, 10);
       csConf.setMaximumCapacity(ROOT + DOT + leafQueueName,
@@ -5163,6 +5161,9 @@ public class TestLeafQueue {
               TestUtils.spyHook);
       queues = newQueues;
       root.reinitialize(newRoot, csContext.getClusterResource());
+
+      Resource clusterResource =
+          Resources.createResource(64 * GB, 64);
       root.updateClusterResource(clusterResource,
           new ResourceLimits(clusterResource));
 
