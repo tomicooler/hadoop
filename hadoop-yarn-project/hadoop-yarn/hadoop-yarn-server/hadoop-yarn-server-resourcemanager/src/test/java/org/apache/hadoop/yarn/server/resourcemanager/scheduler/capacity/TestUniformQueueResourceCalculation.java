@@ -41,7 +41,7 @@ public class TestUniformQueueResourceCalculation extends CapacitySchedulerQueueC
   private static final Resource QUEUE_A12_RES = Resource.newInstance(10 * GB,
       2);
   private static final Resource UPDATE_RES = Resource.newInstance(250 * GB, 40);
-  private static final Resource PERCENTAGE_ALL_RES = Resource.newInstance(10 * GB, 20);
+  private static final Resource PERCENTAGE_ALL_RES = Resource.newInstance(100 * GB, 20);
 
   public static final double A_CAPACITY = 0.3;
   public static final double B_CAPACITY = 0.7;
