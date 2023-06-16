@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.security.PrivilegedExceptionAction;
 
+import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.hadoop.conf.Configuration;
@@ -32,6 +33,8 @@ import org.apache.hadoop.yarn.api.ApplicationClientProtocol;
 import org.apache.hadoop.yarn.conf.YarnConfiguration;
 import org.apache.hadoop.yarn.ipc.YarnRPC;
 import org.junit.Before;
+
+import static org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacitySchedulerTestUtilities.GB;
 
 public abstract class ACLsTestBase {
 
@@ -82,7 +85,12 @@ public abstract class ACLsTestBase {
     };
     new Thread() {
       public void run() {
-        resourceManager.start();
+        try {
+          resourceManager.withResourceStarted(64 * GB, 64);
+        } catch (Exception e) {
+          e.printStackTrace();
+          Assert.fail(e.getMessage());
+        }
       };
     }.start();
     int waitCount = 0;

@@ -458,19 +458,19 @@ public class TestCapacitySchedulerWithMultiResourceTypes {
 
     rm.getRMContext().getRMApps().put(appId, app);
 
-    SchedulerEvent addAppEvent =
-        new AppAddedSchedulerEvent(appId, "a", "user1");
-    cs.handle(addAppEvent);
-    SchedulerEvent addAttemptEvent =
-        new AppAttemptAddedSchedulerEvent(appAttemptId, false);
-    cs.handle(addAttemptEvent);
-
     // add nodes to cluster. Cluster has 20GB, 20 vcores, 80 res_1s.
     HashMap<String, Long> resMap = new HashMap<String, Long>();
     resMap.put("res_1", 80L);
     Resource newResource = Resource.newInstance(2048 * GB, 100, resMap);
     RMNode node = MockNodes.newNodeInfo(0, newResource, 1, "127.0.0.1");
     cs.handle(new NodeAddedSchedulerEvent(node));
+
+    SchedulerEvent addAppEvent =
+        new AppAddedSchedulerEvent(appId, "a", "user1");
+    cs.handle(addAppEvent);
+    SchedulerEvent addAttemptEvent =
+        new AppAttemptAddedSchedulerEvent(appAttemptId, false);
+    cs.handle(addAttemptEvent);
 
     FiCaSchedulerApp fiCaApp1 =
         cs.getSchedulerApplications().get(app.getApplicationId())
