@@ -182,7 +182,7 @@ public class TestCapacitySchedulerApps {
 
   @Test
   public void testKillAllAppsInQueue() throws Exception {
-    MockRM rm = setUpMove();
+    MockRM rm = setUpMove().withResourceStarted(64 * GB, 64);
     AbstractYarnScheduler scheduler =
         (AbstractYarnScheduler) rm.getResourceScheduler();
 
@@ -236,7 +236,7 @@ public class TestCapacitySchedulerApps {
 
   @Test
   public void testKillAllAppsInvalidSource() throws Exception {
-    MockRM rm = setUpMove();
+    MockRM rm = setUpMove().withResourceStarted(64 * GB, 64);
     YarnScheduler scheduler = rm.getResourceScheduler();
 
     // submit an app
@@ -382,7 +382,7 @@ public class TestCapacitySchedulerApps {
 
   @Test
   public void testMoveAppBasic() throws Exception {
-    MockRM rm = setUpMove();
+    MockRM rm = setUpMove().withResourceStarted(64 * GB, 64);
     AbstractYarnScheduler scheduler =
         (AbstractYarnScheduler) rm.getResourceScheduler();
     QueueMetrics metrics = scheduler.getRootQueueMetrics();
@@ -456,7 +456,7 @@ public class TestCapacitySchedulerApps {
 
   @Test
   public void testMoveAppPendingMetrics() throws Exception {
-    MockRM rm = setUpMove();
+    MockRM rm = setUpMove().withResourceStarted(64 * GB, 64);
     ResourceScheduler scheduler = rm.getResourceScheduler();
     assertApps(scheduler, 0, 0, 0);
 
@@ -516,7 +516,7 @@ public class TestCapacitySchedulerApps {
 
   @Test
   public void testMoveAppSameParent() throws Exception {
-    MockRM rm = setUpMove();
+    MockRM rm = setUpMove().withResourceStarted(64 * GB, 64);
     AbstractYarnScheduler scheduler =
         (AbstractYarnScheduler) rm.getResourceScheduler();
 
@@ -1039,7 +1039,7 @@ public class TestCapacitySchedulerApps {
 
   @Test
   public void testMaxParallelAppsPendingQueueMetrics() throws Exception {
-    MockRM rm = setUpMove();
+    MockRM rm = setUpMove().withResourceStarted(64 * GB, 64);
     ResourceScheduler scheduler = rm.getResourceScheduler();
     CapacityScheduler cs = (CapacityScheduler) scheduler;
     cs.getQueueContext().getConfiguration().setInt(CapacitySchedulerConfiguration.getQueuePrefix(A1)
