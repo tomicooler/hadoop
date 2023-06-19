@@ -15,14 +15,14 @@
         "queue" : [ {
           "type" : "capacitySchedulerLeafQueueInfo",
           "queuePath" : "root.test2",
-          "capacity" : 0,
+          "capacity" : 37.5,
           "usedCapacity" : 0,
           "maxCapacity" : 100,
           "absoluteCapacity" : 37.5,
           "absoluteMaxCapacity" : 100,
           "absoluteUsedCapacity" : 0,
           "weight" : 12,
-          "normalizedWeight" : 0.375,
+          "normalizedWeight" : 0,
           "numApplications" : 0,
           "maxParallelApps" : 2147483647,
           "queueName" : "test2",
@@ -59,7 +59,7 @@
           "capacities" : {
             "queueCapacitiesByPartition" : [ {
               "partitionName" : "",
-              "capacity" : 0,
+              "capacity" : 37.5,
               "usedCapacity" : 0,
               "maxCapacity" : 100,
               "absoluteCapacity" : 37.5,
@@ -67,7 +67,7 @@
               "absoluteMaxCapacity" : 100,
               "maxAMLimitPercentage" : 10,
               "weight" : 12,
-              "normalizedWeight" : 0.375,
+              "normalizedWeight" : 0,
               "configuredMinResource" : {
                 "memory" : 0,
                 "vCores" : 0,
@@ -484,14 +484,14 @@
         }, {
           "type" : "capacitySchedulerLeafQueueInfo",
           "queuePath" : "root.default",
-          "capacity" : 0,
+          "capacity" : 12.5,
           "usedCapacity" : 0,
           "maxCapacity" : 100,
           "absoluteCapacity" : 12.5,
           "absoluteMaxCapacity" : 100,
           "absoluteUsedCapacity" : 0,
           "weight" : 4,
-          "normalizedWeight" : 0.125,
+          "normalizedWeight" : 0,
           "numApplications" : 0,
           "maxParallelApps" : 2147483647,
           "queueName" : "default",
@@ -528,7 +528,7 @@
           "capacities" : {
             "queueCapacitiesByPartition" : [ {
               "partitionName" : "",
-              "capacity" : 0,
+              "capacity" : 12.5,
               "usedCapacity" : 0,
               "maxCapacity" : 100,
               "absoluteCapacity" : 12.5,
@@ -536,7 +536,7 @@
               "absoluteMaxCapacity" : 100,
               "maxAMLimitPercentage" : 10,
               "weight" : 4,
-              "normalizedWeight" : 0.125,
+              "normalizedWeight" : 0,
               "configuredMinResource" : {
                 "memory" : 0,
                 "vCores" : 0,
@@ -952,14 +952,14 @@
           "defaultApplicationLifetime" : -1
         }, {
           "queuePath" : "root.test1",
-          "capacity" : 0,
+          "capacity" : 50,
           "usedCapacity" : 0,
           "maxCapacity" : 100,
           "absoluteCapacity" : 50,
           "absoluteMaxCapacity" : 100,
           "absoluteUsedCapacity" : 0,
           "weight" : 16,
-          "normalizedWeight" : 0.5,
+          "normalizedWeight" : 0,
           "numApplications" : 0,
           "maxParallelApps" : 2147483647,
           "queueName" : "test1",
@@ -969,14 +969,14 @@
             "queue" : [ {
               "type" : "capacitySchedulerLeafQueueInfo",
               "queuePath" : "root.test1.auto2",
-              "capacity" : 0,
+              "capacity" : 4.345703,
               "usedCapacity" : 0,
               "maxCapacity" : 100,
-              "absoluteCapacity" : 2.173913,
+              "absoluteCapacity" : 2.1728516,
               "absoluteMaxCapacity" : 100,
               "absoluteUsedCapacity" : 0,
               "weight" : 1,
-              "normalizedWeight" : 0.04347826,
+              "normalizedWeight" : 0,
               "numApplications" : 0,
               "maxParallelApps" : 2147483647,
               "queueName" : "auto2",
@@ -1013,15 +1013,15 @@
               "capacities" : {
                 "queueCapacitiesByPartition" : [ {
                   "partitionName" : "",
-                  "capacity" : 0,
+                  "capacity" : 4.345703,
                   "usedCapacity" : 0,
                   "maxCapacity" : 100,
-                  "absoluteCapacity" : 2.173913,
+                  "absoluteCapacity" : 2.1728516,
                   "absoluteUsedCapacity" : 0,
                   "absoluteMaxCapacity" : 100,
                   "maxAMLimitPercentage" : 100,
                   "weight" : 1,
-                  "normalizedWeight" : 0.04347826,
+                  "normalizedWeight" : 0,
                   "configuredMinResource" : {
                     "memory" : 0,
                     "vCores" : 0,
@@ -1070,7 +1070,7 @@
                   },
                   "effectiveMinResource" : {
                     "memory" : 712,
-                    "vCores" : 0,
+                    "vCores" : 1,
                     "resourceInformations" : {
                       "resourceInformation" : [ {
                         "attributes" : { },
@@ -1087,7 +1087,7 @@
                         "name" : "vcores",
                         "resourceType" : "COUNTABLE",
                         "units" : "",
-                        "value" : 0
+                        "value" : 1
                       } ]
                     }
                   },
@@ -1261,7 +1261,7 @@
               },
               "minEffectiveCapacity" : {
                 "memory" : 712,
-                "vCores" : 0,
+                "vCores" : 1,
                 "resourceInformations" : {
                   "resourceInformation" : [ {
                     "attributes" : { },
@@ -1278,7 +1278,7 @@
                     "name" : "vcores",
                     "resourceType" : "COUNTABLE",
                     "units" : "",
-                    "value" : 0
+                    "value" : 1
                   } ]
                 }
               },
@@ -1438,14 +1438,14 @@
             }, {
               "type" : "capacitySchedulerLeafQueueInfo",
               "queuePath" : "root.test1.test1_2",
-              "capacity" : 0,
+              "capacity" : 8.69751,
               "usedCapacity" : 0,
               "maxCapacity" : 100,
-              "absoluteCapacity" : 4.347826,
+              "absoluteCapacity" : 4.348755,
               "absoluteMaxCapacity" : 100,
               "absoluteUsedCapacity" : 0,
               "weight" : 2,
-              "normalizedWeight" : 0.08695652,
+              "normalizedWeight" : 0,
               "numApplications" : 0,
               "maxParallelApps" : 2147483647,
               "queueName" : "test1_2",
@@ -1482,15 +1482,15 @@
               "capacities" : {
                 "queueCapacitiesByPartition" : [ {
                   "partitionName" : "",
-                  "capacity" : 0,
+                  "capacity" : 8.69751,
                   "usedCapacity" : 0,
                   "maxCapacity" : 100,
-                  "absoluteCapacity" : 4.347826,
+                  "absoluteCapacity" : 4.348755,
                   "absoluteUsedCapacity" : 0,
                   "absoluteMaxCapacity" : 100,
                   "maxAMLimitPercentage" : 10,
                   "weight" : 2,
-                  "normalizedWeight" : 0.08695652,
+                  "normalizedWeight" : 0,
                   "configuredMinResource" : {
                     "memory" : 0,
                     "vCores" : 0,
@@ -1538,7 +1538,7 @@
                     }
                   },
                   "effectiveMinResource" : {
-                    "memory" : 1424,
+                    "memory" : 1425,
                     "vCores" : 1,
                     "resourceInformations" : {
                       "resourceInformation" : [ {
@@ -1548,7 +1548,7 @@
                         "name" : "memory-mb",
                         "resourceType" : "COUNTABLE",
                         "units" : "Mi",
-                        "value" : 1424
+                        "value" : 1425
                       }, {
                         "attributes" : { },
                         "maximumAllocation" : 9223372036854775807,
@@ -1729,7 +1729,7 @@
                 } ]
               },
               "minEffectiveCapacity" : {
-                "memory" : 1424,
+                "memory" : 1425,
                 "vCores" : 1,
                 "resourceInformations" : {
                   "resourceInformation" : [ {
@@ -1739,7 +1739,7 @@
                     "name" : "memory-mb",
                     "resourceType" : "COUNTABLE",
                     "units" : "Mi",
-                    "value" : 1424
+                    "value" : 1425
                   }, {
                     "attributes" : { },
                     "maximumAllocation" : 9223372036854775807,
@@ -1907,14 +1907,14 @@
             }, {
               "type" : "capacitySchedulerLeafQueueInfo",
               "queuePath" : "root.test1.test1_1",
-              "capacity" : 0,
+              "capacity" : 8.69751,
               "usedCapacity" : 0,
               "maxCapacity" : 100,
-              "absoluteCapacity" : 4.347826,
+              "absoluteCapacity" : 4.348755,
               "absoluteMaxCapacity" : 100,
               "absoluteUsedCapacity" : 0,
               "weight" : 2,
-              "normalizedWeight" : 0.08695652,
+              "normalizedWeight" : 0,
               "numApplications" : 0,
               "maxParallelApps" : 2147483647,
               "queueName" : "test1_1",
@@ -1951,15 +1951,15 @@
               "capacities" : {
                 "queueCapacitiesByPartition" : [ {
                   "partitionName" : "",
-                  "capacity" : 0,
+                  "capacity" : 8.69751,
                   "usedCapacity" : 0,
                   "maxCapacity" : 100,
-                  "absoluteCapacity" : 4.347826,
+                  "absoluteCapacity" : 4.348755,
                   "absoluteUsedCapacity" : 0,
                   "absoluteMaxCapacity" : 100,
                   "maxAMLimitPercentage" : 10,
                   "weight" : 2,
-                  "normalizedWeight" : 0.08695652,
+                  "normalizedWeight" : 0,
                   "configuredMinResource" : {
                     "memory" : 0,
                     "vCores" : 0,
@@ -2007,7 +2007,7 @@
                     }
                   },
                   "effectiveMinResource" : {
-                    "memory" : 1424,
+                    "memory" : 1425,
                     "vCores" : 1,
                     "resourceInformations" : {
                       "resourceInformation" : [ {
@@ -2017,7 +2017,7 @@
                         "name" : "memory-mb",
                         "resourceType" : "COUNTABLE",
                         "units" : "Mi",
-                        "value" : 1424
+                        "value" : 1425
                       }, {
                         "attributes" : { },
                         "maximumAllocation" : 9223372036854775807,
@@ -2198,7 +2198,7 @@
                 } ]
               },
               "minEffectiveCapacity" : {
-                "memory" : 1424,
+                "memory" : 1425,
                 "vCores" : 1,
                 "resourceInformations" : {
                   "resourceInformation" : [ {
@@ -2208,7 +2208,7 @@
                     "name" : "memory-mb",
                     "resourceType" : "COUNTABLE",
                     "units" : "Mi",
-                    "value" : 1424
+                    "value" : 1425
                   }, {
                     "attributes" : { },
                     "maximumAllocation" : 9223372036854775807,
@@ -2376,14 +2376,14 @@
             }, {
               "type" : "capacitySchedulerLeafQueueInfo",
               "queuePath" : "root.test1.test1_3",
-              "capacity" : 0,
+              "capacity" : 52.17285,
               "usedCapacity" : 0,
               "maxCapacity" : 100,
-              "absoluteCapacity" : 26.086956,
+              "absoluteCapacity" : 26.086426,
               "absoluteMaxCapacity" : 100,
               "absoluteUsedCapacity" : 0,
               "weight" : 12,
-              "normalizedWeight" : 0.5217391,
+              "normalizedWeight" : 0,
               "numApplications" : 0,
               "maxParallelApps" : 2147483647,
               "queueName" : "test1_3",
@@ -2420,15 +2420,15 @@
               "capacities" : {
                 "queueCapacitiesByPartition" : [ {
                   "partitionName" : "",
-                  "capacity" : 0,
+                  "capacity" : 52.17285,
                   "usedCapacity" : 0,
                   "maxCapacity" : 100,
-                  "absoluteCapacity" : 26.086956,
+                  "absoluteCapacity" : 26.086426,
                   "absoluteUsedCapacity" : 0,
                   "absoluteMaxCapacity" : 100,
                   "maxAMLimitPercentage" : 10,
                   "weight" : 12,
-                  "normalizedWeight" : 0.5217391,
+                  "normalizedWeight" : 0,
                   "configuredMinResource" : {
                     "memory" : 0,
                     "vCores" : 0,
@@ -2845,14 +2845,14 @@
             }, {
               "type" : "capacitySchedulerLeafQueueInfo",
               "queuePath" : "root.test1.auto1",
-              "capacity" : 0,
+              "capacity" : 4.345703,
               "usedCapacity" : 0,
               "maxCapacity" : 100,
-              "absoluteCapacity" : 2.173913,
+              "absoluteCapacity" : 2.1728516,
               "absoluteMaxCapacity" : 100,
               "absoluteUsedCapacity" : 0,
               "weight" : 1,
-              "normalizedWeight" : 0.04347826,
+              "normalizedWeight" : 0,
               "numApplications" : 0,
               "maxParallelApps" : 2147483647,
               "queueName" : "auto1",
@@ -2889,15 +2889,15 @@
               "capacities" : {
                 "queueCapacitiesByPartition" : [ {
                   "partitionName" : "",
-                  "capacity" : 0,
+                  "capacity" : 4.345703,
                   "usedCapacity" : 0,
                   "maxCapacity" : 100,
-                  "absoluteCapacity" : 2.173913,
+                  "absoluteCapacity" : 2.1728516,
                   "absoluteUsedCapacity" : 0,
                   "absoluteMaxCapacity" : 100,
                   "maxAMLimitPercentage" : 100,
                   "weight" : 1,
-                  "normalizedWeight" : 0.04347826,
+                  "normalizedWeight" : 0,
                   "configuredMinResource" : {
                     "memory" : 0,
                     "vCores" : 0,
@@ -2946,7 +2946,7 @@
                   },
                   "effectiveMinResource" : {
                     "memory" : 712,
-                    "vCores" : 0,
+                    "vCores" : 1,
                     "resourceInformations" : {
                       "resourceInformation" : [ {
                         "attributes" : { },
@@ -2963,7 +2963,7 @@
                         "name" : "vcores",
                         "resourceType" : "COUNTABLE",
                         "units" : "",
-                        "value" : 0
+                        "value" : 1
                       } ]
                     }
                   },
@@ -3137,7 +3137,7 @@
               },
               "minEffectiveCapacity" : {
                 "memory" : 712,
-                "vCores" : 0,
+                "vCores" : 1,
                 "resourceInformations" : {
                   "resourceInformation" : [ {
                     "attributes" : { },
@@ -3154,7 +3154,7 @@
                     "name" : "vcores",
                     "resourceType" : "COUNTABLE",
                     "units" : "",
-                    "value" : 0
+                    "value" : 1
                   } ]
                 }
               },
@@ -3313,14 +3313,14 @@
               "defaultApplicationLifetime" : -1
             }, {
               "queuePath" : "root.test1.autoParent2",
-              "capacity" : 0,
+              "capacity" : 4.345703,
               "usedCapacity" : 0,
               "maxCapacity" : 100,
-              "absoluteCapacity" : 2.173913,
+              "absoluteCapacity" : 2.1728516,
               "absoluteMaxCapacity" : 100,
               "absoluteUsedCapacity" : 0,
               "weight" : 1,
-              "normalizedWeight" : 0.04347826,
+              "normalizedWeight" : 0,
               "numApplications" : 0,
               "maxParallelApps" : 2147483647,
               "queueName" : "autoParent2",
@@ -3330,14 +3330,14 @@
                 "queue" : [ {
                   "type" : "capacitySchedulerLeafQueueInfo",
                   "queuePath" : "root.test1.autoParent2.auto3",
-                  "capacity" : 0,
+                  "capacity" : 100,
                   "usedCapacity" : 0,
                   "maxCapacity" : 100,
-                  "absoluteCapacity" : 2.173913,
+                  "absoluteCapacity" : 2.1728516,
                   "absoluteMaxCapacity" : 100,
                   "absoluteUsedCapacity" : 0,
                   "weight" : 1,
-                  "normalizedWeight" : 1,
+                  "normalizedWeight" : 0,
                   "numApplications" : 0,
                   "maxParallelApps" : 2147483647,
                   "queueName" : "auto3",
@@ -3374,15 +3374,15 @@
                   "capacities" : {
                     "queueCapacitiesByPartition" : [ {
                       "partitionName" : "",
-                      "capacity" : 0,
+                      "capacity" : 100,
                       "usedCapacity" : 0,
                       "maxCapacity" : 100,
-                      "absoluteCapacity" : 2.173913,
+                      "absoluteCapacity" : 2.1728516,
                       "absoluteUsedCapacity" : 0,
                       "absoluteMaxCapacity" : 100,
                       "maxAMLimitPercentage" : 100,
                       "weight" : 1,
-                      "normalizedWeight" : 1,
+                      "normalizedWeight" : 0,
                       "configuredMinResource" : {
                         "memory" : 0,
                         "vCores" : 0,
@@ -3431,7 +3431,7 @@
                       },
                       "effectiveMinResource" : {
                         "memory" : 712,
-                        "vCores" : 0,
+                        "vCores" : 1,
                         "resourceInformations" : {
                           "resourceInformation" : [ {
                             "attributes" : { },
@@ -3448,7 +3448,7 @@
                             "name" : "vcores",
                             "resourceType" : "COUNTABLE",
                             "units" : "",
-                            "value" : 0
+                            "value" : 1
                           } ]
                         }
                       },
@@ -3622,7 +3622,7 @@
                   },
                   "minEffectiveCapacity" : {
                     "memory" : 712,
-                    "vCores" : 0,
+                    "vCores" : 1,
                     "resourceInformations" : {
                       "resourceInformation" : [ {
                         "attributes" : { },
@@ -3639,7 +3639,7 @@
                         "name" : "vcores",
                         "resourceType" : "COUNTABLE",
                         "units" : "",
-                        "value" : 0
+                        "value" : 1
                       } ]
                     }
                   },
@@ -3829,15 +3829,15 @@
               "capacities" : {
                 "queueCapacitiesByPartition" : [ {
                   "partitionName" : "",
-                  "capacity" : 0,
+                  "capacity" : 4.345703,
                   "usedCapacity" : 0,
                   "maxCapacity" : 100,
-                  "absoluteCapacity" : 2.173913,
+                  "absoluteCapacity" : 2.1728516,
                   "absoluteUsedCapacity" : 0,
                   "absoluteMaxCapacity" : 100,
                   "maxAMLimitPercentage" : 0,
                   "weight" : 1,
-                  "normalizedWeight" : 0.04347826,
+                  "normalizedWeight" : 0,
                   "configuredMinResource" : {
                     "memory" : 0,
                     "vCores" : 0,
@@ -3886,7 +3886,7 @@
                   },
                   "effectiveMinResource" : {
                     "memory" : 712,
-                    "vCores" : 0,
+                    "vCores" : 1,
                     "resourceInformations" : {
                       "resourceInformation" : [ {
                         "attributes" : { },
@@ -3903,7 +3903,7 @@
                         "name" : "vcores",
                         "resourceType" : "COUNTABLE",
                         "units" : "",
-                        "value" : 0
+                        "value" : 1
                       } ]
                     }
                   },
@@ -4008,7 +4008,7 @@
               },
               "minEffectiveCapacity" : {
                 "memory" : 712,
-                "vCores" : 0,
+                "vCores" : 1,
                 "resourceInformations" : {
                   "resourceInformation" : [ {
                     "attributes" : { },
@@ -4025,7 +4025,7 @@
                     "name" : "vcores",
                     "resourceType" : "COUNTABLE",
                     "units" : "",
-                    "value" : 0
+                    "value" : 1
                   } ]
                 }
               },
@@ -4108,14 +4108,14 @@
               }
             }, {
               "queuePath" : "root.test1.autoParent1",
-              "capacity" : 0,
+              "capacity" : 4.345703,
               "usedCapacity" : 0,
               "maxCapacity" : 100,
-              "absoluteCapacity" : 2.173913,
+              "absoluteCapacity" : 2.1728516,
               "absoluteMaxCapacity" : 100,
               "absoluteUsedCapacity" : 0,
               "weight" : 1,
-              "normalizedWeight" : 0.04347826,
+              "normalizedWeight" : 0,
               "numApplications" : 0,
               "maxParallelApps" : 2147483647,
               "queueName" : "autoParent1",
@@ -4125,14 +4125,14 @@
                 "queue" : [ {
                   "type" : "capacitySchedulerLeafQueueInfo",
                   "queuePath" : "root.test1.autoParent1.auto3",
-                  "capacity" : 0,
+                  "capacity" : 50,
                   "usedCapacity" : 0,
                   "maxCapacity" : 100,
-                  "absoluteCapacity" : 1.0869565,
+                  "absoluteCapacity" : 1.0864258,
                   "absoluteMaxCapacity" : 100,
                   "absoluteUsedCapacity" : 0,
                   "weight" : 1,
-                  "normalizedWeight" : 0.5,
+                  "normalizedWeight" : 0,
                   "numApplications" : 0,
                   "maxParallelApps" : 2147483647,
                   "queueName" : "auto3",
@@ -4169,15 +4169,15 @@
                   "capacities" : {
                     "queueCapacitiesByPartition" : [ {
                       "partitionName" : "",
-                      "capacity" : 0,
+                      "capacity" : 50,
                       "usedCapacity" : 0,
                       "maxCapacity" : 100,
-                      "absoluteCapacity" : 1.0869565,
+                      "absoluteCapacity" : 1.0864258,
                       "absoluteUsedCapacity" : 0,
                       "absoluteMaxCapacity" : 100,
                       "maxAMLimitPercentage" : 100,
                       "weight" : 1,
-                      "normalizedWeight" : 0.5,
+                      "normalizedWeight" : 0,
                       "configuredMinResource" : {
                         "memory" : 0,
                         "vCores" : 0,
@@ -4226,7 +4226,7 @@
                       },
                       "effectiveMinResource" : {
                         "memory" : 356,
-                        "vCores" : 0,
+                        "vCores" : 1,
                         "resourceInformations" : {
                           "resourceInformation" : [ {
                             "attributes" : { },
@@ -4243,7 +4243,7 @@
                             "name" : "vcores",
                             "resourceType" : "COUNTABLE",
                             "units" : "",
-                            "value" : 0
+                            "value" : 1
                           } ]
                         }
                       },
@@ -4417,7 +4417,7 @@
                   },
                   "minEffectiveCapacity" : {
                     "memory" : 356,
-                    "vCores" : 0,
+                    "vCores" : 1,
                     "resourceInformations" : {
                       "resourceInformation" : [ {
                         "attributes" : { },
@@ -4434,7 +4434,7 @@
                         "name" : "vcores",
                         "resourceType" : "COUNTABLE",
                         "units" : "",
-                        "value" : 0
+                        "value" : 1
                       } ]
                     }
                   },
@@ -4594,14 +4594,14 @@
                 }, {
                   "type" : "capacitySchedulerLeafQueueInfo",
                   "queuePath" : "root.test1.autoParent1.auto4",
-                  "capacity" : 0,
+                  "capacity" : 50,
                   "usedCapacity" : 0,
                   "maxCapacity" : 100,
-                  "absoluteCapacity" : 1.0869565,
+                  "absoluteCapacity" : 1.0864258,
                   "absoluteMaxCapacity" : 100,
                   "absoluteUsedCapacity" : 0,
                   "weight" : 1,
-                  "normalizedWeight" : 0.5,
+                  "normalizedWeight" : 0,
                   "numApplications" : 0,
                   "maxParallelApps" : 2147483647,
                   "queueName" : "auto4",
@@ -4638,15 +4638,15 @@
                   "capacities" : {
                     "queueCapacitiesByPartition" : [ {
                       "partitionName" : "",
-                      "capacity" : 0,
+                      "capacity" : 50,
                       "usedCapacity" : 0,
                       "maxCapacity" : 100,
-                      "absoluteCapacity" : 1.0869565,
+                      "absoluteCapacity" : 1.0864258,
                       "absoluteUsedCapacity" : 0,
                       "absoluteMaxCapacity" : 100,
                       "maxAMLimitPercentage" : 100,
                       "weight" : 1,
-                      "normalizedWeight" : 0.5,
+                      "normalizedWeight" : 0,
                       "configuredMinResource" : {
                         "memory" : 0,
                         "vCores" : 0,
@@ -5093,15 +5093,15 @@
               "capacities" : {
                 "queueCapacitiesByPartition" : [ {
                   "partitionName" : "",
-                  "capacity" : 0,
+                  "capacity" : 4.345703,
                   "usedCapacity" : 0,
                   "maxCapacity" : 100,
-                  "absoluteCapacity" : 2.173913,
+                  "absoluteCapacity" : 2.1728516,
                   "absoluteUsedCapacity" : 0,
                   "absoluteMaxCapacity" : 100,
                   "maxAMLimitPercentage" : 0,
                   "weight" : 1,
-                  "normalizedWeight" : 0.04347826,
+                  "normalizedWeight" : 0,
                   "configuredMinResource" : {
                     "memory" : 0,
                     "vCores" : 0,
@@ -5150,7 +5150,7 @@
                   },
                   "effectiveMinResource" : {
                     "memory" : 712,
-                    "vCores" : 0,
+                    "vCores" : 1,
                     "resourceInformations" : {
                       "resourceInformation" : [ {
                         "attributes" : { },
@@ -5167,7 +5167,7 @@
                         "name" : "vcores",
                         "resourceType" : "COUNTABLE",
                         "units" : "",
-                        "value" : 0
+                        "value" : 1
                       } ]
                     }
                   },
@@ -5272,7 +5272,7 @@
               },
               "minEffectiveCapacity" : {
                 "memory" : 712,
-                "vCores" : 0,
+                "vCores" : 1,
                 "resourceInformations" : {
                   "resourceInformation" : [ {
                     "attributes" : { },
@@ -5289,7 +5289,7 @@
                     "name" : "vcores",
                     "resourceType" : "COUNTABLE",
                     "units" : "",
-                    "value" : 0
+                    "value" : 1
                   } ]
                 }
               },
@@ -5377,14 +5377,14 @@
               }
             }, {
               "queuePath" : "root.test1.parent",
-              "capacity" : 0,
+              "capacity" : 4.345703,
               "usedCapacity" : 0,
               "maxCapacity" : 100,
-              "absoluteCapacity" : 2.173913,
+              "absoluteCapacity" : 2.1728516,
               "absoluteMaxCapacity" : 100,
               "absoluteUsedCapacity" : 0,
               "weight" : 1,
-              "normalizedWeight" : 0.04347826,
+              "normalizedWeight" : 0,
               "numApplications" : 0,
               "maxParallelApps" : 2147483647,
               "queueName" : "parent",
@@ -5393,14 +5393,14 @@
               "queues" : {
                 "queue" : [ {
                   "queuePath" : "root.test1.parent.autoParent2",
-                  "capacity" : 0,
+                  "capacity" : 100,
                   "usedCapacity" : 0,
                   "maxCapacity" : 100,
-                  "absoluteCapacity" : 2.173913,
+                  "absoluteCapacity" : 2.1728516,
                   "absoluteMaxCapacity" : 100,
                   "absoluteUsedCapacity" : 0,
                   "weight" : 1,
-                  "normalizedWeight" : 1,
+                  "normalizedWeight" : 0,
                   "numApplications" : 0,
                   "maxParallelApps" : 2147483647,
                   "queueName" : "autoParent2",
@@ -5410,14 +5410,14 @@
                     "queue" : [ {
                       "type" : "capacitySchedulerLeafQueueInfo",
                       "queuePath" : "root.test1.parent.autoParent2.auto3",
-                      "capacity" : 0,
+                      "capacity" : 100,
                       "usedCapacity" : 0,
                       "maxCapacity" : 100,
-                      "absoluteCapacity" : 2.173913,
+                      "absoluteCapacity" : 2.1728516,
                       "absoluteMaxCapacity" : 100,
                       "absoluteUsedCapacity" : 0,
                       "weight" : 1,
-                      "normalizedWeight" : 1,
+                      "normalizedWeight" : 0,
                       "numApplications" : 0,
                       "maxParallelApps" : 2147483647,
                       "queueName" : "auto3",
@@ -5454,15 +5454,15 @@
                       "capacities" : {
                         "queueCapacitiesByPartition" : [ {
                           "partitionName" : "",
-                          "capacity" : 0,
+                          "capacity" : 100,
                           "usedCapacity" : 0,
                           "maxCapacity" : 100,
-                          "absoluteCapacity" : 2.173913,
+                          "absoluteCapacity" : 2.1728516,
                           "absoluteUsedCapacity" : 0,
                           "absoluteMaxCapacity" : 100,
                           "maxAMLimitPercentage" : 100,
                           "weight" : 1,
-                          "normalizedWeight" : 1,
+                          "normalizedWeight" : 0,
                           "configuredMinResource" : {
                             "memory" : 0,
                             "vCores" : 0,
@@ -5511,7 +5511,7 @@
                           },
                           "effectiveMinResource" : {
                             "memory" : 712,
-                            "vCores" : 0,
+                            "vCores" : 1,
                             "resourceInformations" : {
                               "resourceInformation" : [ {
                                 "attributes" : { },
@@ -5528,7 +5528,7 @@
                                 "name" : "vcores",
                                 "resourceType" : "COUNTABLE",
                                 "units" : "",
-                                "value" : 0
+                                "value" : 1
                               } ]
                             }
                           },
@@ -5702,7 +5702,7 @@
                       },
                       "minEffectiveCapacity" : {
                         "memory" : 712,
-                        "vCores" : 0,
+                        "vCores" : 1,
                         "resourceInformations" : {
                           "resourceInformation" : [ {
                             "attributes" : { },
@@ -5719,7 +5719,7 @@
                             "name" : "vcores",
                             "resourceType" : "COUNTABLE",
                             "units" : "",
-                            "value" : 0
+                            "value" : 1
                           } ]
                         }
                       },
@@ -5909,15 +5909,15 @@
                   "capacities" : {
                     "queueCapacitiesByPartition" : [ {
                       "partitionName" : "",
-                      "capacity" : 0,
+                      "capacity" : 100,
                       "usedCapacity" : 0,
                       "maxCapacity" : 100,
-                      "absoluteCapacity" : 2.173913,
+                      "absoluteCapacity" : 2.1728516,
                       "absoluteUsedCapacity" : 0,
                       "absoluteMaxCapacity" : 100,
                       "maxAMLimitPercentage" : 0,
                       "weight" : 1,
-                      "normalizedWeight" : 1,
+                      "normalizedWeight" : 0,
                       "configuredMinResource" : {
                         "memory" : 0,
                         "vCores" : 0,
@@ -5966,7 +5966,7 @@
                       },
                       "effectiveMinResource" : {
                         "memory" : 712,
-                        "vCores" : 0,
+                        "vCores" : 1,
                         "resourceInformations" : {
                           "resourceInformation" : [ {
                             "attributes" : { },
@@ -5983,7 +5983,7 @@
                             "name" : "vcores",
                             "resourceType" : "COUNTABLE",
                             "units" : "",
-                            "value" : 0
+                            "value" : 1
                           } ]
                         }
                       },
@@ -6088,7 +6088,7 @@
                   },
                   "minEffectiveCapacity" : {
                     "memory" : 712,
-                    "vCores" : 0,
+                    "vCores" : 1,
                     "resourceInformations" : {
                       "resourceInformation" : [ {
                         "attributes" : { },
@@ -6105,7 +6105,7 @@
                         "name" : "vcores",
                         "resourceType" : "COUNTABLE",
                         "units" : "",
-                        "value" : 0
+                        "value" : 1
                       } ]
                     }
                   },
@@ -6219,15 +6219,15 @@
               "capacities" : {
                 "queueCapacitiesByPartition" : [ {
                   "partitionName" : "",
-                  "capacity" : 0,
+                  "capacity" : 4.345703,
                   "usedCapacity" : 0,
                   "maxCapacity" : 100,
-                  "absoluteCapacity" : 2.173913,
+                  "absoluteCapacity" : 2.1728516,
                   "absoluteUsedCapacity" : 0,
                   "absoluteMaxCapacity" : 100,
                   "maxAMLimitPercentage" : 0,
                   "weight" : 1,
-                  "normalizedWeight" : 0.04347826,
+                  "normalizedWeight" : 0,
                   "configuredMinResource" : {
                     "memory" : 0,
                     "vCores" : 0,
@@ -6276,7 +6276,7 @@
                   },
                   "effectiveMinResource" : {
                     "memory" : 712,
-                    "vCores" : 0,
+                    "vCores" : 1,
                     "resourceInformations" : {
                       "resourceInformation" : [ {
                         "attributes" : { },
@@ -6293,7 +6293,7 @@
                         "name" : "vcores",
                         "resourceType" : "COUNTABLE",
                         "units" : "",
-                        "value" : 0
+                        "value" : 1
                       } ]
                     }
                   },
@@ -6398,7 +6398,7 @@
               },
               "minEffectiveCapacity" : {
                 "memory" : 712,
-                "vCores" : 0,
+                "vCores" : 1,
                 "resourceInformations" : {
                   "resourceInformation" : [ {
                     "attributes" : { },
@@ -6415,7 +6415,7 @@
                     "name" : "vcores",
                     "resourceType" : "COUNTABLE",
                     "units" : "",
-                    "value" : 0
+                    "value" : 1
                   } ]
                 }
               },
@@ -6498,14 +6498,14 @@
               }
             }, {
               "queuePath" : "root.test1.parent2",
-              "capacity" : 0,
+              "capacity" : 4.345703,
               "usedCapacity" : 0,
               "maxCapacity" : 100,
-              "absoluteCapacity" : 2.173913,
+              "absoluteCapacity" : 2.1728516,
               "absoluteMaxCapacity" : 100,
               "absoluteUsedCapacity" : 0,
               "weight" : 1,
-              "normalizedWeight" : 0.04347826,
+              "normalizedWeight" : 0,
               "numApplications" : 0,
               "maxParallelApps" : 2147483647,
               "queueName" : "parent2",
@@ -6515,14 +6515,14 @@
                 "queue" : [ {
                   "type" : "capacitySchedulerLeafQueueInfo",
                   "queuePath" : "root.test1.parent2.auto7",
-                  "capacity" : 0,
+                  "capacity" : 100,
                   "usedCapacity" : 0,
                   "maxCapacity" : 100,
-                  "absoluteCapacity" : 2.173913,
+                  "absoluteCapacity" : 2.1728516,
                   "absoluteMaxCapacity" : 100,
                   "absoluteUsedCapacity" : 0,
                   "weight" : 1,
-                  "normalizedWeight" : 1,
+                  "normalizedWeight" : 0,
                   "numApplications" : 0,
                   "maxParallelApps" : 2147483647,
                   "queueName" : "auto7",
@@ -6559,15 +6559,15 @@
                   "capacities" : {
                     "queueCapacitiesByPartition" : [ {
                       "partitionName" : "",
-                      "capacity" : 0,
+                      "capacity" : 100,
                       "usedCapacity" : 0,
                       "maxCapacity" : 100,
-                      "absoluteCapacity" : 2.173913,
+                      "absoluteCapacity" : 2.1728516,
                       "absoluteUsedCapacity" : 0,
                       "absoluteMaxCapacity" : 100,
                       "maxAMLimitPercentage" : 100,
                       "weight" : 1,
-                      "normalizedWeight" : 1,
+                      "normalizedWeight" : 0,
                       "configuredMinResource" : {
                         "memory" : 0,
                         "vCores" : 0,
@@ -6616,7 +6616,7 @@
                       },
                       "effectiveMinResource" : {
                         "memory" : 712,
-                        "vCores" : 0,
+                        "vCores" : 1,
                         "resourceInformations" : {
                           "resourceInformation" : [ {
                             "attributes" : { },
@@ -6633,7 +6633,7 @@
                             "name" : "vcores",
                             "resourceType" : "COUNTABLE",
                             "units" : "",
-                            "value" : 0
+                            "value" : 1
                           } ]
                         }
                       },
@@ -6807,7 +6807,7 @@
                   },
                   "minEffectiveCapacity" : {
                     "memory" : 712,
-                    "vCores" : 0,
+                    "vCores" : 1,
                     "resourceInformations" : {
                       "resourceInformation" : [ {
                         "attributes" : { },
@@ -6824,7 +6824,7 @@
                         "name" : "vcores",
                         "resourceType" : "COUNTABLE",
                         "units" : "",
-                        "value" : 0
+                        "value" : 1
                       } ]
                     }
                   },
@@ -7014,15 +7014,15 @@
               "capacities" : {
                 "queueCapacitiesByPartition" : [ {
                   "partitionName" : "",
-                  "capacity" : 0,
+                  "capacity" : 4.345703,
                   "usedCapacity" : 0,
                   "maxCapacity" : 100,
-                  "absoluteCapacity" : 2.173913,
+                  "absoluteCapacity" : 2.1728516,
                   "absoluteUsedCapacity" : 0,
                   "absoluteMaxCapacity" : 100,
                   "maxAMLimitPercentage" : 0,
                   "weight" : 1,
-                  "normalizedWeight" : 0.04347826,
+                  "normalizedWeight" : 0,
                   "configuredMinResource" : {
                     "memory" : 0,
                     "vCores" : 0,
@@ -7071,7 +7071,7 @@
                   },
                   "effectiveMinResource" : {
                     "memory" : 712,
-                    "vCores" : 0,
+                    "vCores" : 1,
                     "resourceInformations" : {
                       "resourceInformation" : [ {
                         "attributes" : { },
@@ -7088,7 +7088,7 @@
                         "name" : "vcores",
                         "resourceType" : "COUNTABLE",
                         "units" : "",
-                        "value" : 0
+                        "value" : 1
                       } ]
                     }
                   },
@@ -7193,7 +7193,7 @@
               },
               "minEffectiveCapacity" : {
                 "memory" : 712,
-                "vCores" : 0,
+                "vCores" : 1,
                 "resourceInformations" : {
                   "resourceInformation" : [ {
                     "attributes" : { },
@@ -7210,7 +7210,7 @@
                     "name" : "vcores",
                     "resourceType" : "COUNTABLE",
                     "units" : "",
-                    "value" : 0
+                    "value" : 1
                   } ]
                 }
               },
@@ -7293,14 +7293,14 @@
               }
             }, {
               "queuePath" : "root.test1.parent3",
-              "capacity" : 0,
+              "capacity" : 4.345703,
               "usedCapacity" : 0,
               "maxCapacity" : 100,
-              "absoluteCapacity" : 2.173913,
+              "absoluteCapacity" : 2.1728516,
               "absoluteMaxCapacity" : 100,
               "absoluteUsedCapacity" : 0,
               "weight" : 1,
-              "normalizedWeight" : 0.04347826,
+              "normalizedWeight" : 0,
               "numApplications" : 0,
               "maxParallelApps" : 2147483647,
               "queueName" : "parent3",
@@ -7310,14 +7310,14 @@
                 "queue" : [ {
                   "type" : "capacitySchedulerLeafQueueInfo",
                   "queuePath" : "root.test1.parent3.auto8",
-                  "capacity" : 0,
+                  "capacity" : 100,
                   "usedCapacity" : 0,
                   "maxCapacity" : 100,
-                  "absoluteCapacity" : 2.173913,
+                  "absoluteCapacity" : 2.1728516,
                   "absoluteMaxCapacity" : 100,
                   "absoluteUsedCapacity" : 0,
                   "weight" : 1,
-                  "normalizedWeight" : 1,
+                  "normalizedWeight" : 0,
                   "numApplications" : 0,
                   "maxParallelApps" : 2147483647,
                   "queueName" : "auto8",
@@ -7354,15 +7354,15 @@
                   "capacities" : {
                     "queueCapacitiesByPartition" : [ {
                       "partitionName" : "",
-                      "capacity" : 0,
+                      "capacity" : 100,
                       "usedCapacity" : 0,
                       "maxCapacity" : 100,
-                      "absoluteCapacity" : 2.173913,
+                      "absoluteCapacity" : 2.1728516,
                       "absoluteUsedCapacity" : 0,
                       "absoluteMaxCapacity" : 100,
                       "maxAMLimitPercentage" : 100,
                       "weight" : 1,
-                      "normalizedWeight" : 1,
+                      "normalizedWeight" : 0,
                       "configuredMinResource" : {
                         "memory" : 0,
                         "vCores" : 0,
@@ -7809,15 +7809,15 @@
               "capacities" : {
                 "queueCapacitiesByPartition" : [ {
                   "partitionName" : "",
-                  "capacity" : 0,
+                  "capacity" : 4.345703,
                   "usedCapacity" : 0,
                   "maxCapacity" : 100,
-                  "absoluteCapacity" : 2.173913,
+                  "absoluteCapacity" : 2.1728516,
                   "absoluteUsedCapacity" : 0,
                   "absoluteMaxCapacity" : 100,
                   "maxAMLimitPercentage" : 0,
                   "weight" : 1,
-                  "normalizedWeight" : 0.04347826,
+                  "normalizedWeight" : 0,
                   "configuredMinResource" : {
                     "memory" : 0,
                     "vCores" : 0,
@@ -8119,7 +8119,7 @@
           "capacities" : {
             "queueCapacitiesByPartition" : [ {
               "partitionName" : "",
-              "capacity" : 0,
+              "capacity" : 50,
               "usedCapacity" : 0,
               "maxCapacity" : 100,
               "absoluteCapacity" : 50,
@@ -8127,7 +8127,7 @@
               "absoluteMaxCapacity" : 100,
               "maxAMLimitPercentage" : 0,
               "weight" : 16,
-              "normalizedWeight" : 0.5,
+              "normalizedWeight" : 0,
               "configuredMinResource" : {
                 "memory" : 0,
                 "vCores" : 0,

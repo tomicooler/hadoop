@@ -110,6 +110,7 @@ public class TestRMWebServicesCapacitySchedDynamicConfig extends JerseyTestBase 
   @Test
   public void testWeightModeFlexibleAQC() throws Exception {
     Map<String, String> conf = new HashMap<>();
+    conf.put("yarn.scheduler.capacity.legacy-queue-mode.enabled", "false");
     conf.put("yarn.scheduler.capacity.root.queues", "default, test1, test2");
     conf.put("yarn.scheduler.capacity.root.test1.queues", "test1_1, test1_2, test1_3");
     conf.put("yarn.scheduler.capacity.root.default.capacity", "4w");
