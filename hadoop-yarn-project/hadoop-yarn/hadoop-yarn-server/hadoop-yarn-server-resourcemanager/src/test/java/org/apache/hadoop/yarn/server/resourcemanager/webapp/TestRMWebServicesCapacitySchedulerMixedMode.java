@@ -36,9 +36,9 @@ import org.apache.hadoop.yarn.webapp.JerseyTestBase;
 import org.junit.Test;
 
 import static org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CapacitySchedulerConfigGeneratorForTest.createConfiguration;
-import static org.apache.hadoop.yarn.server.resourcemanager.webapp.TestRMWebServicesCapacitySched.assertJsonResponse;
-import static org.apache.hadoop.yarn.server.resourcemanager.webapp.TestRMWebServicesCapacitySched.createMockRM;
-import static org.apache.hadoop.yarn.server.resourcemanager.webapp.TestRMWebServicesCapacitySched.createWebAppDescriptor;
+import static org.apache.hadoop.yarn.server.resourcemanager.webapp.TestWebServiceUtil.assertJsonResponse;
+import static org.apache.hadoop.yarn.server.resourcemanager.webapp.TestWebServiceUtil.createRM;
+import static org.apache.hadoop.yarn.server.resourcemanager.webapp.TestWebServiceUtil.createWebAppDescriptor;
 
 /**
  * The queues are configured in each test so that the effectiveMinResource is the same.
@@ -237,9 +237,9 @@ public class TestRMWebServicesCapacitySchedulerMixedMode extends JerseyTestBase 
   }
 
   private void initResourceManager(Configuration conf) throws IOException {
-    rm = createMockRM(new CapacitySchedulerConfiguration(conf));
-    GuiceServletConfig.setInjector(
-        Guice.createInjector(new TestRMWebServicesCapacitySched.WebServletModule(rm)));
+    rm = createRM(new CapacitySchedulerConfiguration(conf));
+   // GuiceServletConfig.setInjector(
+   //     Guice.createInjector(new TestRMWebServicesCapacitySched.WebServletModule(rm)));
     rm.start();
   }
 }
