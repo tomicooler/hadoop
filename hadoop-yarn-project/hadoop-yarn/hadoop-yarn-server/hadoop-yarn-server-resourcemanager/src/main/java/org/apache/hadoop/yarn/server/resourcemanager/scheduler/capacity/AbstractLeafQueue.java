@@ -31,6 +31,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -52,6 +53,7 @@ import org.apache.hadoop.yarn.api.records.QueueInfo;
 import org.apache.hadoop.yarn.api.records.QueueState;
 import org.apache.hadoop.yarn.api.records.QueueUserACLInfo;
 import org.apache.hadoop.yarn.api.records.Resource;
+import org.apache.hadoop.yarn.api.records.ResourceInformation;
 import org.apache.hadoop.yarn.factories.RecordFactory;
 import org.apache.hadoop.yarn.factory.providers.RecordFactoryProvider;
 import org.apache.hadoop.yarn.nodelabels.CommonNodeLabelsManager;
@@ -1948,8 +1950,12 @@ public class AbstractLeafQueue extends AbstractCSQueue {
     LOG.error("tomi ALQ refreshAfterResourceCalculation {}", queuePath);
 
     lastClusterResource = clusterResource;
+
     // Update maximum applications for the queue and for users
-    updateMaximumApplications();
+    updateMaximumApplications(queueContext.getConfiguration().isLegacyQueueMode() ||
+        Stream.of(clusterResource.getResources())
+            .map(ResourceInformation::getValue)
+            .anyMatch(num -> num > 0));
 
     updateCurrentResourceLimits(resourceLimits, clusterResource);
 
@@ -2012,7 +2018,7 @@ public class AbstractLeafQueue extends AbstractCSQueue {
       super.updateEffectiveResources(clusterResource);
 
       // Update maximum applications for the queue and for users
-      updateMaximumApplications();
+      updateMaximumApplications(true);
 
       updateCurrentResourceLimits(currentResourceLimits, clusterResource);
 
@@ -2412,7 +2418,7 @@ public class AbstractLeafQueue extends AbstractCSQueue {
     }
   }
 
-  void updateMaximumApplications() {
+  void updateMaximumApplications(boolean absoluteCapacityIsReadyForUse) {
     CapacitySchedulerConfiguration configuration = queueContext.getConfiguration();
     int maxAppsForQueue = configuration.getMaximumApplicationsPerQueue(getQueuePath());
 
@@ -2424,16 +2430,20 @@ public class AbstractLeafQueue extends AbstractCSQueue {
 
     String maxLabel = RMNodeLabelsManager.NO_LABEL;
     if (maxAppsForQueue < 0) {
-      if (maxDefaultPerQueueApps > 0 && this.capacityConfigType
-          != CapacityConfigType.ABSOLUTE_RESOURCE) {
+      if (!absoluteCapacityIsReadyForUse) {
         maxAppsForQueue = baseMaxApplications;
       } else {
-        for (String label : queueNodeLabelsSettings.getConfiguredNodeLabels()) {
-          int maxApplicationsByLabel = (int) (baseMaxApplications
-              * queueCapacities.getAbsoluteCapacity(label));
-          if (maxApplicationsByLabel > maxAppsForQueue) {
-            maxAppsForQueue = maxApplicationsByLabel;
-            maxLabel = label;
+        if (maxDefaultPerQueueApps > 0 && this.capacityConfigType
+            != CapacityConfigType.ABSOLUTE_RESOURCE) {
+          maxAppsForQueue = baseMaxApplications;
+        } else {
+          for (String label : queueNodeLabelsSettings.getConfiguredNodeLabels()) {
+            int maxApplicationsByLabel = (int) (baseMaxApplications
+                * queueCapacities.getAbsoluteCapacity(label));
+            if (maxApplicationsByLabel > maxAppsForQueue) {
+              maxAppsForQueue = maxApplicationsByLabel;
+              maxLabel = label;
+            }
           }
         }
       }
