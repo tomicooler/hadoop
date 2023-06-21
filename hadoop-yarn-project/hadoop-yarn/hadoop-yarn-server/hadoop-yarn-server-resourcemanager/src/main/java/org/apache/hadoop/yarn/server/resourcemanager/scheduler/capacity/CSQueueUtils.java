@@ -30,7 +30,7 @@ import org.apache.hadoop.yarn.util.resource.Resources;
 
 public class CSQueueUtils {
 
-  public final static float EPSILON = 0.0001f;
+  public final static float EPSILON = 0.001f;
 
   /*
    * Used only by tests
