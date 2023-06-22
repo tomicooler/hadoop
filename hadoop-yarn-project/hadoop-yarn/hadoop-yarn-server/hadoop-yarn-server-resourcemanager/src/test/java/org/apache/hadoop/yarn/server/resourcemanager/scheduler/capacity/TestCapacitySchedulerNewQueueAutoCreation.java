@@ -311,6 +311,7 @@ public class TestCapacitySchedulerNewQueueAutoCreation
   public void testAutoCreateQueueWhenSiblingsNotInWeightMode()
       throws Exception {
     startScheduler();
+    csConf.setLegacyQueueModeEnabled(true);
     csConf.setCapacity("root.a", 50f);
     csConf.setCapacity("root.b", 50f);
     csConf.setCapacity("root.a.a1", 100f);
