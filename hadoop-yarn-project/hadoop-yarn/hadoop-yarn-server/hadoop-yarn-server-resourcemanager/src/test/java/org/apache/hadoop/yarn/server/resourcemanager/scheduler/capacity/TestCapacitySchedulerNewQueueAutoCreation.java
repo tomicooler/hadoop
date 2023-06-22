@@ -56,7 +56,7 @@ public class TestCapacitySchedulerNewQueueAutoCreation
       org.apache.hadoop.yarn.server.resourcemanager
           .scheduler.capacity.TestCapacitySchedulerAutoCreatedQueueBase.class);
   public static final int GB = 1024;
-  private static final int MAX_MEMORY = 1200;
+  public static final int MAX_MEMORY = 1200;
   private MockRM mockRM = null;
   private CapacityScheduler cs;
   private CapacitySchedulerConfiguration csConf;
