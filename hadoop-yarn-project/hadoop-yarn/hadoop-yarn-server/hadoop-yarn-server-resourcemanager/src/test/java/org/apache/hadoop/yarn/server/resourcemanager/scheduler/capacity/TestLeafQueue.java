@@ -5190,8 +5190,8 @@ public class TestLeafQueue {
       // limit maximum apps by max system apps
       csConf.setMaximumSystemApplications(15);
       queueContext.reinitialize();
-      leafQueue.updateClusterResource(Resource.newInstance(0, 0),
-          new ResourceLimits(Resource.newInstance(0, 0)));
+      leafQueue.updateClusterResource(csContext.getClusterResource(),
+          new ResourceLimits(csContext.getClusterResource()));
 
       assertEquals(15, leafQueue.getMaxApplications());
 
