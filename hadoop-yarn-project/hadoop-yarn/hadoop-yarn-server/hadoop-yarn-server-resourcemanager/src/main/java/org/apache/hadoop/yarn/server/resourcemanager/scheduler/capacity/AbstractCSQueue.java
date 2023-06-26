@@ -381,6 +381,7 @@ public abstract class AbstractCSQueue implements CSQueue {
       this.reservationsContinueLooking =
           configuration.getReservationContinueLook();
 
+      LOG.error("Setting the capacityVector1 {}", queuePath);
       this.configuredCapacityVectors = configuration
           .parseConfiguredResourceVector(queuePath.getFullPath(),
               this.queueNodeLabelsSettings.getConfiguredNodeLabels());
@@ -388,6 +389,21 @@ public abstract class AbstractCSQueue implements CSQueue {
           .parseConfiguredMaximumCapacityVector(queuePath.getFullPath(),
               this.queueNodeLabelsSettings.getConfiguredNodeLabels(),
               QueueCapacityVector.newInstance());
+      LOG.error("Setting the capacityVector2 {} {}", queuePath, configuredCapacityVectors);
+
+      if (this instanceof ReservationQueue) {
+        for (final String label : queueNodeLabelsSettings.getConfiguredNodeLabels()) {
+          setConfiguredMinCapacityVector(label,
+              QueueCapacityVector.of(queueCapacities.getCapacity(label) * 100,
+                  QueueCapacityVector.ResourceUnitCapacityType.PERCENTAGE));
+          setConfiguredMaxCapacityVector(label,
+              QueueCapacityVector.of(queueCapacities.getMaximumCapacity(label) * 100,
+                  QueueCapacityVector.ResourceUnitCapacityType.PERCENTAGE));
+        }
+
+        LOG.error("Setting the capacityVector3 {} {}", queuePath, configuredCapacityVectors);
+      }
+
 
       // Re-adjust weight when mixed capacity type is used. 5w == [memory=5w, vcores=5w]
       for (final String label : queueNodeLabelsSettings.getConfiguredNodeLabels()) {
