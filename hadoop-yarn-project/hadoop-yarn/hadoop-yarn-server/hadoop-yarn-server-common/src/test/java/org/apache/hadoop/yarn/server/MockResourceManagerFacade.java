@@ -103,6 +103,8 @@ import org.apache.hadoop.yarn.api.protocolrecords.ReservationSubmissionRequest;
 import org.apache.hadoop.yarn.api.protocolrecords.ReservationSubmissionResponse;
 import org.apache.hadoop.yarn.api.protocolrecords.ReservationUpdateRequest;
 import org.apache.hadoop.yarn.api.protocolrecords.ReservationUpdateResponse;
+import org.apache.hadoop.yarn.api.protocolrecords.SetApplicationTagsRequest;
+import org.apache.hadoop.yarn.api.protocolrecords.SetApplicationTagsResponse;
 import org.apache.hadoop.yarn.api.protocolrecords.SignalContainerRequest;
 import org.apache.hadoop.yarn.api.protocolrecords.SignalContainerResponse;
 import org.apache.hadoop.yarn.api.protocolrecords.SubmitApplicationRequest;
@@ -553,6 +555,12 @@ public class MockResourceManagerFacade implements ApplicationClientProtocol,
     }
     LOG.info("Force killing application: " + appId);
     return KillApplicationResponse.newInstance(true);
+  }
+
+  @Override
+  public SetApplicationTagsResponse setApplicationTags(
+      SetApplicationTagsRequest request) throws YarnException, IOException {
+    return SetApplicationTagsResponse.newInstance(request.getApplicationTags());
   }
 
   @Override

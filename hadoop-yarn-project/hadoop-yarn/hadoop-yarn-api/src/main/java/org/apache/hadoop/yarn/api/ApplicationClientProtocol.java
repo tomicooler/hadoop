@@ -63,6 +63,8 @@ import org.apache.hadoop.yarn.api.protocolrecords.ReservationSubmissionRequest;
 import org.apache.hadoop.yarn.api.protocolrecords.ReservationSubmissionResponse;
 import org.apache.hadoop.yarn.api.protocolrecords.ReservationUpdateRequest;
 import org.apache.hadoop.yarn.api.protocolrecords.ReservationUpdateResponse;
+import org.apache.hadoop.yarn.api.protocolrecords.SetApplicationTagsRequest;
+import org.apache.hadoop.yarn.api.protocolrecords.SetApplicationTagsResponse;
 import org.apache.hadoop.yarn.api.protocolrecords.UpdateApplicationPriorityRequest;
 import org.apache.hadoop.yarn.api.protocolrecords.UpdateApplicationPriorityResponse;
 import org.apache.hadoop.yarn.api.protocolrecords.UpdateApplicationTimeoutsRequest;
@@ -220,6 +222,33 @@ public interface ApplicationClientProtocol extends ApplicationBaseProtocol {
   public KillApplicationResponse forceKillApplication(
       KillApplicationRequest request) 
   throws YarnException, IOException;
+
+  /**
+   * <p>The interface used by clients to request the
+   * <code>ResourceManager</code> to set the application tags of an application.</p>
+   *
+   * <p>The client, via {@link SetApplicationTagsRequest} provides the
+   * {@link ApplicationId} of the application and the application tags to set.</p>
+   *
+   * <p> In secure mode, the <code>ResourceManager</code> verifies access to the
+   * application, queue etc. before setting the application tags.</p>
+   *
+   * <p>Currently, the <code>ResourceManager</code> returns an empty response
+   * on success and throws an exception on rejecting the request.</p>
+   *
+   * @param request request to set the application tags on a submitted application
+   * @return <code>ResourceManager</code> returns an empty response
+   * on success and throws an exception on rejecting the request
+   * @throws YarnException exceptions from yarn servers.
+   * @throws IOException   io error occur.
+   * @see #getQueueUserAcls(GetQueueUserAclsInfoRequest)
+   */
+  @Public
+  @Stable
+  @Idempotent
+  public SetApplicationTagsResponse setApplicationTags(
+      SetApplicationTagsRequest request)
+      throws YarnException, IOException;
 
   /**
    * <p>The interface used by clients to get metrics about the cluster from

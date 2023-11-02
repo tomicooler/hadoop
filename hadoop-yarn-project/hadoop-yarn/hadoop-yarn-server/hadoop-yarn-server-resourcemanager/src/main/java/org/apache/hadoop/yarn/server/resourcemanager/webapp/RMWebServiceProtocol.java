@@ -317,6 +317,41 @@ public interface RMWebServiceProtocol {
       InterruptedException, IOException;
 
   /**
+   * This method retrieves the tags for a specific app, and it is reachable by
+   * using {@link RMWSConsts#APPS_APPID_TAGS}.
+   *
+   * @param hsr   the servlet request
+   * @param appId the Id of the application we want the tags. It is a
+   *              PathParam.
+   * @return the tags for a specific application
+   * @throws AuthorizationException if the user is not authorized
+   */
+  Set<String> getAppTags(HttpServletRequest hsr, String appId)
+      throws AuthorizationException;
+
+  // TODO Set<String> ??
+  // TODO 7 implementation like the others
+
+  /**
+   * This method updates the tags of the app in input, and it is reachable by
+   * using {@link RMWSConsts#APPS_APPID_TAGS}.
+   *
+   * @param targetTags the target tags for the app. It is a content param.
+   * @param hsr        the servlet request
+   * @param appId      the Id of the application we want to update the tags. It is a
+   *                   PathParam.
+   * @return Response containing the status code
+   * @throws AuthorizationException if the user is not authorized to invoke this
+   *                                method
+   * @throws YarnException          if app does not exist
+   * @throws InterruptedException   if interrupted
+   * @throws IOException            if doAs action throws an IOException
+   */
+  Response updateAppTags(Set<String> targetTags, HttpServletRequest hsr,
+                         String appId) throws AuthorizationException, YarnException,
+      InterruptedException, IOException;
+
+  /**
    * This method retrieves all the node labels with the respective nodes in the
    * cluster, and it is reachable by using
    * {@link RMWSConsts#GET_NODE_TO_LABELS}.

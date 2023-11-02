@@ -98,6 +98,8 @@ import org.apache.hadoop.yarn.api.protocolrecords.ReservationListResponse;
 import org.apache.hadoop.yarn.api.protocolrecords.ReservationSubmissionRequest;
 import org.apache.hadoop.yarn.api.protocolrecords.ReservationSubmissionResponse;
 import org.apache.hadoop.yarn.api.protocolrecords.ReservationUpdateRequest;
+import org.apache.hadoop.yarn.api.protocolrecords.SetApplicationTagsRequest;
+import org.apache.hadoop.yarn.api.protocolrecords.SetApplicationTagsResponse;
 import org.apache.hadoop.yarn.api.protocolrecords.SignalContainerRequest;
 import org.apache.hadoop.yarn.api.protocolrecords.SubmitApplicationRequest;
 import org.apache.hadoop.yarn.api.protocolrecords.SubmitApplicationResponse;
@@ -1290,6 +1292,89 @@ public class RMWebServices extends WebServices implements RMWebServiceProtocol {
     ret.setState(app.getState().toString());
 
     return Response.status(Status.OK).entity(ret).build();
+  }
+
+  @GET
+  @Path(RMWSConsts.APPS_APPID_TAGS)
+  @Produces({MediaType.APPLICATION_JSON + "; " + JettyUtils.UTF_8,
+      MediaType.APPLICATION_XML + "; " + JettyUtils.UTF_8})
+  @Override
+  public Set<String> getAppTags(@Context HttpServletRequest hsr,
+                                @PathParam(RMWSConsts.APPID) String appId) {
+    initForReadableEndpoints();
+
+    UserGroupInformation callerUGI = getCallerUserGroupInformation(hsr, true);
+    String userName = "";
+    if (callerUGI != null) {
+      userName = callerUGI.getUserName();
+    }
+    RMApp app;
+    try {
+      app = getRMAppForAppId(appId);
+    } catch (NotFoundException e) {
+      RMAuditLogger.logFailure(userName, AuditConstants.GET_APP_TAGS,
+          "UNKNOWN", "RMWebService",
+          "Trying to get tags of an absent application " + appId);
+      throw e;
+    }
+
+    // TODO: authorization ??
+    return app.getApplicationTags();
+  }
+
+  @PUT
+  @Path(RMWSConsts.APPS_APPID_TAGS)
+  @Produces({MediaType.APPLICATION_JSON + "; " + JettyUtils.UTF_8,
+      MediaType.APPLICATION_XML + "; " + JettyUtils.UTF_8})
+  @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+  @Override
+  public Response updateAppTags(Set<String> targetTags,
+                                @Context HttpServletRequest hsr,
+                                @PathParam(RMWSConsts.APPID) String appId)
+      throws IOException, InterruptedException {
+    UserGroupInformation callerUGI = getCallerUserGroupInformation(hsr, true);
+    initForWritableEndpoints(callerUGI, false);
+
+    String userName = callerUGI.getUserName();
+    RMApp app;
+    try {
+      app = getRMAppForAppId(appId);
+    } catch (NotFoundException e) {
+      RMAuditLogger.logFailure(userName, AuditConstants.SET_APP_TAGS,
+          "UNKNOWN", "RMWebService",
+          "Trying to update tags of an absent application " + appId);
+      throw e;
+    }
+
+    SetApplicationTagsResponse resp;
+    try {
+      resp = callerUGI
+          .doAs((PrivilegedExceptionAction<SetApplicationTagsResponse>) () -> {
+            SetApplicationTagsRequest req =
+                SetApplicationTagsRequest.newInstance(app.getApplicationId(), targetTags);
+            return rm.getClientRMService().setApplicationTags(req);
+          });
+    } catch (UndeclaredThrowableException ue) {
+      // if the root cause is a permissions issue
+      // bubble that up to the user
+      if (ue.getCause() instanceof YarnException) {
+        YarnException ye = (YarnException) ue.getCause();
+        if (ye.getCause() instanceof AccessControlException) {
+          String msg = "Unauthorized attempt to set application tags on appid "
+              + app.getApplicationId()
+              + " by remote user " + userName;
+          return Response.status(Status.FORBIDDEN).entity(msg).build();
+        } else {
+          throw ue;
+        }
+      } else {
+        throw ue;
+      }
+    }
+
+    return Response.status(Status.OK).entity(
+            resp != null ? resp.getApplicationTags() : "error")
+        .build();
   }
 
   @GET

@@ -270,6 +270,11 @@ public class MockRMApp implements RMApp {
   }
 
   @Override
+  public void setApplicationTags(Set<String> tags) {
+    this.applicationTags = tags;
+  }
+
+  @Override
   public boolean isAppFinalStateStored() {
     return true;
   }

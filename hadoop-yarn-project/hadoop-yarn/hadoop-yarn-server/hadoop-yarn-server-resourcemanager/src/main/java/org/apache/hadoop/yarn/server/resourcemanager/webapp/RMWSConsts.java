@@ -161,6 +161,12 @@ public final class RMWSConsts {
   public static final String APPS_APPID_STATE = "/apps/{appid}/state";
 
   /**
+   * Path for {@code RMWebServiceProtocol#getAppTags} and
+   * {@code RMWebServiceProtocol#updateAppTags}.
+   */
+  public static final String APPS_APPID_TAGS = "/apps/{appid}/tags";
+
+  /**
    * Path for {@code RMWebServiceProtocol#postDelegationToken} and
    * {@code RMWebServiceProtocol#cancelDelegationToken}.
    */
@@ -223,6 +229,7 @@ public final class RMWSConsts {
   public static final String STATES = "states";
   public static final String NODEID = "nodeId";
   public static final String STATE = "state";
+  public static final String TAGS = "tags";
   public static final String FINAL_STATUS = "finalStatus";
   public static final String USER = "user";
   public static final String QUEUE = "queue";

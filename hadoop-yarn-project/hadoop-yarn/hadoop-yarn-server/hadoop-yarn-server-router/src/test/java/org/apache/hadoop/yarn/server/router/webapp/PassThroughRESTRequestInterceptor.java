@@ -212,6 +212,17 @@ public class PassThroughRESTRequestInterceptor
   }
 
   @Override
+  public Set<String> getAppTags(HttpServletRequest hsr, String appId) throws AuthorizationException {
+    return getNextInterceptor().getAppTags(hsr, appId);
+  }
+
+  @Override
+  public Response updateAppTags(Set<String> targetTags, HttpServletRequest hsr, String appId)
+      throws AuthorizationException, YarnException, InterruptedException, IOException {
+    return getNextInterceptor().updateAppTags(targetTags, hsr, appId);
+  }
+
+  @Override
   public NodeToLabelsInfo getNodeToLabels(HttpServletRequest hsr)
       throws IOException {
     return getNextInterceptor().getNodeToLabels(hsr);

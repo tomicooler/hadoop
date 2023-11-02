@@ -85,6 +85,8 @@ import org.apache.hadoop.yarn.api.protocolrecords.ReservationSubmissionRequest;
 import org.apache.hadoop.yarn.api.protocolrecords.ReservationSubmissionResponse;
 import org.apache.hadoop.yarn.api.protocolrecords.ReservationUpdateRequest;
 import org.apache.hadoop.yarn.api.protocolrecords.ReservationUpdateResponse;
+import org.apache.hadoop.yarn.api.protocolrecords.SetApplicationTagsRequest;
+import org.apache.hadoop.yarn.api.protocolrecords.SetApplicationTagsResponse;
 import org.apache.hadoop.yarn.api.protocolrecords.SignalContainerRequest;
 import org.apache.hadoop.yarn.api.protocolrecords.SignalContainerResponse;
 import org.apache.hadoop.yarn.api.protocolrecords.SubmitApplicationRequest;
@@ -156,6 +158,12 @@ public class DefaultClientRequestInterceptor
   public KillApplicationResponse forceKillApplication(
       KillApplicationRequest request) throws YarnException, IOException {
     return clientRMProxy.forceKillApplication(request);
+  }
+
+  @Override
+  public SetApplicationTagsResponse setApplicationTags(SetApplicationTagsRequest request)
+      throws YarnException, IOException {
+    return clientRMProxy.setApplicationTags(request);
   }
 
   @Override

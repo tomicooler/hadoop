@@ -149,7 +149,7 @@ public class RMAppImpl implements RMApp, Recoverable {
   private final long submitTime;
   private final Map<RMNode, NodeUpdateType> updatedNodes = new HashMap<>();
   private final String applicationType;
-  private final Set<String> applicationTags;
+  private Set<String> applicationTags;
   private Map<String, String> applicationSchedulingEnvs = new HashMap<>();
 
   private final long attemptFailuresValidityInterval;
@@ -1659,6 +1659,11 @@ public class RMAppImpl implements RMApp, Recoverable {
   @Override
   public Set<String> getApplicationTags() {
     return this.applicationTags;
+  }
+
+  @Override
+  public void setApplicationTags(Set<String> tags) {
+    applicationTags = tags;
   }
 
   @Override

@@ -39,6 +39,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import org.apache.commons.cli.UnrecognizedOptionException;
 import org.apache.commons.lang3.Range;
+import org.apache.hadoop.yarn.api.protocolrecords.SetApplicationTagsRequest;
+import org.apache.hadoop.yarn.api.protocolrecords.SetApplicationTagsResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.hadoop.classification.InterfaceAudience.Private;
@@ -771,6 +773,48 @@ public class ClientRMService extends AbstractService implements
             "A tag can only have ASCII " + "characters! Invalid tag - " + tag));
       }
     }
+  }
+
+  @Override
+  public SetApplicationTagsResponse setApplicationTags(SetApplicationTagsRequest request)
+      throws YarnException {
+    ApplicationId applicationId = request.getApplicationId();
+    CallerContext callerContext = CallerContext.getCurrent();
+
+    UserGroupInformation callerUGI;
+    try {
+      callerUGI = UserGroupInformation.getCurrentUser();
+    } catch (IOException ie) {
+      LOG.info("Error getting UGI ", ie);
+      RMAuditLogger.logFailure("UNKNOWN", AuditConstants.SET_APP_TAGS,
+          "UNKNOWN", "ClientRMService", "Error getting UGI",
+          applicationId, callerContext);
+      throw RPCUtil.getRemoteException(ie);
+    }
+    RMApp application = this.rmContext.getRMApps().get(applicationId);
+    if (application == null) {
+      RMAuditLogger.logFailure(callerUGI.getUserName(),
+          AuditConstants.SET_APP_TAGS, "UNKNOWN", "ClientRMService",
+          "Trying to kill an absent application", applicationId, callerContext);
+      throw new ApplicationNotFoundException("Trying to kill an absent"
+          + " application " + applicationId);
+    }
+
+    if (!checkAccess(callerUGI, application.getUser(),
+        ApplicationAccessType.MODIFY_APP, application)) {
+      RMAuditLogger.logFailure(callerUGI.getShortUserName(),
+          AuditConstants.SET_APP_TAGS,
+          "User doesn't have permissions to "
+              + ApplicationAccessType.MODIFY_APP, "ClientRMService",
+          AuditConstants.UNAUTHORIZED_USER, applicationId, callerContext);
+      throw RPCUtil.getRemoteException(new AccessControlException("User "
+          + callerUGI.getShortUserName() + " cannot perform operation "
+          + ApplicationAccessType.MODIFY_APP.name() + " on " + applicationId));
+    }
+
+    checkTags(request.getApplicationTags());
+    application.setApplicationTags(request.getApplicationTags());
+    return SetApplicationTagsResponse.newInstance(application.getApplicationTags());
   }
 
   @SuppressWarnings("unchecked")

@@ -179,6 +179,11 @@ public abstract class MockAsm extends MockApps {
     }
 
     @Override
+    public void setApplicationTags(Set<String> tags) {
+      throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
     public void setQueue(String name) {
       throw new UnsupportedOperationException("Not supported yet.");
     }

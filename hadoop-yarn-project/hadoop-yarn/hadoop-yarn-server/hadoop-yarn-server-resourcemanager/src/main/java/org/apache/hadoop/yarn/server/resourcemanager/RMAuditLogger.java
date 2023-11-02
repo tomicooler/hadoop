@@ -54,6 +54,9 @@ public class RMAuditLogger {
     public static final String SUBMIT_APP_REQUEST = "Submit Application Request";
     public static final String MOVE_APP_REQUEST = "Move Application Request";
     public static final String GET_APP_STATE = "Get Application State";
+
+    public static final String GET_APP_TAGS = "Get Application Tags";
+    public static final String SET_APP_TAGS = "Set Application Tags";
     public static final String GET_APP_PRIORITY = "Get Application Priority";
     public static final String GET_APP_QUEUE = "Get Application Queue";
     public static final String GET_APP_ATTEMPTS = "Get Application Attempts";

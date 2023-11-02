@@ -756,6 +756,19 @@ public class FederationInterceptorREST extends AbstractRESTRequestInterceptor {
     return response;
   }
 
+  @Override
+  public Set<String> getAppTags(HttpServletRequest hsr, String appId) throws AuthorizationException {
+    // TODO
+    return null;
+  }
+
+  @Override
+  public Response updateAppTags(Set<String> targetTags, HttpServletRequest hsr, String appId)
+      throws AuthorizationException, YarnException, InterruptedException, IOException {
+    // TODO
+    return null;
+  }
+
   /**
    * The YARN Router will forward the request to all the YARN RMs in parallel,
    * after that it will group all the ApplicationReports by the ApplicationId.

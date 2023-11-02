@@ -19,6 +19,7 @@
 package org.apache.hadoop.yarn.server.router.webapp;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -176,6 +177,18 @@ public class MockRESTRequestInterceptor extends AbstractRESTRequestInterceptor {
   public Response updateAppState(AppState targetState, HttpServletRequest hsr,
       String appId) throws AuthorizationException, YarnException,
       InterruptedException, IOException {
+    return Response.status(Status.OK).build();
+  }
+
+  @Override
+  public Set<String> getAppTags(HttpServletRequest hsr, String appId)
+      throws AuthorizationException {
+    return new HashSet<>();
+  }
+
+  @Override
+  public Response updateAppTags(Set<String> targetTags, HttpServletRequest hsr, String appId)
+      throws AuthorizationException, YarnException, InterruptedException, IOException {
     return Response.status(Status.OK).build();
   }
 

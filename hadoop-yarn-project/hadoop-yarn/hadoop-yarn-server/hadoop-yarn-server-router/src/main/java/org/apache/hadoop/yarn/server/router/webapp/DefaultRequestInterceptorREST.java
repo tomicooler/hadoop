@@ -20,6 +20,7 @@ package org.apache.hadoop.yarn.server.router.webapp;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -268,6 +269,25 @@ public class DefaultRequestInterceptorREST
         Response.class, HTTPMethods.PUT, RMWSConsts.RM_WEB_SERVICE_PATH
             + RMWSConsts.APPS + "/" + appId + "/" + RMWSConsts.STATE,
         targetState, null, getConf(), client);
+  }
+
+  @Override
+  public Set<String> getAppTags(HttpServletRequest hsr, String appId)
+      throws AuthorizationException {
+    // todo genericForward  Unchecked assignment: 'java.util.Set' to 'java.util.Set<java.lang.String>'
+    return RouterWebServiceUtil.genericForward(webAppAddress, hsr,
+        Set.class, HTTPMethods.GET, RMWSConsts.RM_WEB_SERVICE_PATH
+            + RMWSConsts.APPS + "/" + appId + "/" + RMWSConsts.TAGS,
+        null, null, getConf(), client);
+  }
+
+  @Override
+  public Response updateAppTags(Set<String> targetTags, HttpServletRequest hsr, String appId)
+      throws AuthorizationException, YarnException, InterruptedException, IOException {
+    return RouterWebServiceUtil.genericForward(webAppAddress, hsr,
+        Response.class, HTTPMethods.PUT, RMWSConsts.RM_WEB_SERVICE_PATH
+            + RMWSConsts.APPS + "/" + appId + "/" + RMWSConsts.TAGS,
+        targetTags, null, getConf(), client);
   }
 
   @Override

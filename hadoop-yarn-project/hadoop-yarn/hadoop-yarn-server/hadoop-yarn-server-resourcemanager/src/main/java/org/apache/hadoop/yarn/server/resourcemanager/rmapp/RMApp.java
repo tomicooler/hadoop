@@ -256,6 +256,13 @@ public interface RMApp extends EventHandler<RMAppEvent> {
   Set<String> getApplicationTags();
 
   /**
+   * Set tags for the application
+   *
+   * @param tags the application tags to set
+   */
+  void setApplicationTags(Set<String> tags);
+
+  /**
    * Check whether this application's state has been saved to the state store.
    * @return the flag indicating whether the applications's state is stored.
    */

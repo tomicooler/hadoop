@@ -179,6 +179,15 @@ message KillApplicationResponseProto {
   optional bool is_kill_completed = 1 [default = false];
 }
 
+message SetApplicationTagsRequestProto {
+  optional ApplicationIdProto application_id = 1;
+  repeated string applicationTags = 2;
+}
+
+message SetApplicationTagsResponseProto {
+  repeated string applicationTags = 1;
+}
+
 message GetClusterMetricsRequestProto {
 }
 

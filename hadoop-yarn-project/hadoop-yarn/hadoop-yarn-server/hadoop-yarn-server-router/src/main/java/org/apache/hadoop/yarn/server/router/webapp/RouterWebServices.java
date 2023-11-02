@@ -497,6 +497,31 @@ public class RouterWebServices implements RMWebServiceProtocol {
   }
 
   @GET
+  @Path(RMWSConsts.APPS_APPID_TAGS)
+  @Produces({MediaType.APPLICATION_JSON + "; " + JettyUtils.UTF_8,
+      MediaType.APPLICATION_XML + "; " + JettyUtils.UTF_8})
+  @Override
+  public Set<String> getAppTags(HttpServletRequest hsr, String appId) throws AuthorizationException {
+    init();
+    RequestInterceptorChainWrapper pipeline = getInterceptorChain(hsr);
+    return pipeline.getRootInterceptor().getAppTags(hsr, appId);
+  }
+
+  @PUT
+  @Path(RMWSConsts.APPS_APPID_TAGS)
+  @Produces({MediaType.APPLICATION_JSON + "; " + JettyUtils.UTF_8,
+      MediaType.APPLICATION_XML + "; " + JettyUtils.UTF_8})
+  @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+  @Override
+  public Response updateAppTags(Set<String> targetTags, HttpServletRequest hsr, String appId)
+      throws AuthorizationException, YarnException, InterruptedException, IOException {
+    init();
+    RequestInterceptorChainWrapper pipeline = getInterceptorChain(hsr);
+    return pipeline.getRootInterceptor().updateAppTags(targetTags, hsr,
+        appId);
+  }
+
+  @GET
   @Path(RMWSConsts.GET_NODE_TO_LABELS)
   @Produces({ MediaType.APPLICATION_JSON + "; " + JettyUtils.UTF_8,
       MediaType.APPLICATION_XML + "; " + JettyUtils.UTF_8 })

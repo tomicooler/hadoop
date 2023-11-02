@@ -107,6 +107,8 @@ import org.apache.hadoop.yarn.api.protocolrecords.ReservationSubmissionRequest;
 import org.apache.hadoop.yarn.api.protocolrecords.ReservationSubmissionResponse;
 import org.apache.hadoop.yarn.api.protocolrecords.ReservationUpdateRequest;
 import org.apache.hadoop.yarn.api.protocolrecords.ReservationUpdateResponse;
+import org.apache.hadoop.yarn.api.protocolrecords.SetApplicationTagsRequest;
+import org.apache.hadoop.yarn.api.protocolrecords.SetApplicationTagsResponse;
 import org.apache.hadoop.yarn.api.protocolrecords.SignalContainerRequest;
 import org.apache.hadoop.yarn.api.protocolrecords.SignalContainerResponse;
 import org.apache.hadoop.yarn.api.protocolrecords.SubmitApplicationRequest;
@@ -676,6 +678,13 @@ public class FederationClientInterceptor
     RouterAuditLogger.logSuccess(user.getShortUserName(), FORCE_KILL_APP,
         TARGET_CLIENT_RM_SERVICE, applicationId);
     return response;
+  }
+
+  @Override
+  public SetApplicationTagsResponse setApplicationTags(SetApplicationTagsRequest request)
+      throws YarnException, IOException {
+    // TODO
+    return null;
   }
 
   /**
