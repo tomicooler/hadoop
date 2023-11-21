@@ -55,6 +55,7 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -1299,8 +1300,9 @@ public class RMWebServices extends WebServices implements RMWebServiceProtocol {
   @Produces({MediaType.APPLICATION_JSON + "; " + JettyUtils.UTF_8,
       MediaType.APPLICATION_XML + "; " + JettyUtils.UTF_8})
   @Override
-  public Set<String> getAppTags(@Context HttpServletRequest hsr,
-                                @PathParam(RMWSConsts.APPID) String appId) {
+  public Response getAppTags(@Context HttpServletRequest hsr,
+                             @PathParam(RMWSConsts.APPID) String appId) {
+    System.out.println("tomi getAppTags " + appId);
     initForReadableEndpoints();
 
     UserGroupInformation callerUGI = getCallerUserGroupInformation(hsr, true);
@@ -1318,8 +1320,19 @@ public class RMWebServices extends WebServices implements RMWebServiceProtocol {
       throw e;
     }
 
+    GenericEntity<Set<String>> entity = new GenericEntity<Set<String>>(app.getApplicationTags()){};
+
+    String type = MediaType.APPLICATION_JSON;
+    final String format = hsr.getHeader(HttpHeaders.ACCEPT);
+    if (format != null &&
+        format.toLowerCase().contains(MediaType.APPLICATION_XML))
+    {
+      type = MediaType.APPLICATION_XML;
+    }
+
+    System.out.println("tomi getAppTags resp " + appId + " " + app.getApplicationTags() + " " + type);
     // TODO: authorization ??
-    return app.getApplicationTags();
+    return Response.status(Status.OK).type(type + "; " + JettyUtils.UTF_8).entity(entity).build();
   }
 
   @PUT
@@ -1332,6 +1345,8 @@ public class RMWebServices extends WebServices implements RMWebServiceProtocol {
                                 @Context HttpServletRequest hsr,
                                 @PathParam(RMWSConsts.APPID) String appId)
       throws IOException, InterruptedException {
+    System.out.println("tomi updateAppTags " + appId + " " + targetTags);
+
     UserGroupInformation callerUGI = getCallerUserGroupInformation(hsr, true);
     initForWritableEndpoints(callerUGI, false);
 
@@ -1346,6 +1361,7 @@ public class RMWebServices extends WebServices implements RMWebServiceProtocol {
       throw e;
     }
 
+    System.out.println("tomi updateAppTags found app " + appId + " " + targetTags + " " + app);
     SetApplicationTagsResponse resp;
     try {
       resp = callerUGI
@@ -1355,6 +1371,7 @@ public class RMWebServices extends WebServices implements RMWebServiceProtocol {
             return rm.getClientRMService().setApplicationTags(req);
           });
     } catch (UndeclaredThrowableException ue) {
+      System.out.println("tomi undeclared ue " + ue);
       // if the root cause is a permissions issue
       // bubble that up to the user
       if (ue.getCause() instanceof YarnException) {
@@ -1371,6 +1388,8 @@ public class RMWebServices extends WebServices implements RMWebServiceProtocol {
         throw ue;
       }
     }
+
+    System.out.println("tomi updateAppTags found app " + appId + " " + targetTags + " " + app + " " + resp.getApplicationTags());
 
     return Response.status(Status.OK).entity(
             resp != null ? resp.getApplicationTags() : "error")

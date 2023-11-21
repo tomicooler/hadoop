@@ -181,9 +181,9 @@ public class MockRESTRequestInterceptor extends AbstractRESTRequestInterceptor {
   }
 
   @Override
-  public Set<String> getAppTags(HttpServletRequest hsr, String appId)
+  public Response getAppTags(HttpServletRequest hsr, String appId)
       throws AuthorizationException {
-    return new HashSet<>();
+    return Response.status(Status.OK).build();
   }
 
   @Override

@@ -212,7 +212,7 @@ public class PassThroughRESTRequestInterceptor
   }
 
   @Override
-  public Set<String> getAppTags(HttpServletRequest hsr, String appId) throws AuthorizationException {
+  public Response getAppTags(HttpServletRequest hsr, String appId) throws AuthorizationException {
     return getNextInterceptor().getAppTags(hsr, appId);
   }
 

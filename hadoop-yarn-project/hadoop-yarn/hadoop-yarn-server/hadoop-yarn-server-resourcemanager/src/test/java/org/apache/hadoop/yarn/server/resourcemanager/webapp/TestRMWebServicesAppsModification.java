@@ -20,6 +20,7 @@ package org.apache.hadoop.yarn.server.resourcemanager.webapp;
 
 import static org.apache.hadoop.yarn.webapp.WebServicesTestUtils.assertResponseStatusCode;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
@@ -676,6 +677,148 @@ public class TestRMWebServicesAppsModification extends JerseyTestBase {
       assertResponseStatusCode(expectedAuthorizedMode,
           response.getStatusInfo());
     }
+  }
+
+  @Test(timeout = 120000)
+  public void testUpdateApplicationTags() throws Exception {
+    rm.start();
+    MockNM amNodeManager = rm.registerNode("127.0.0.1:1234", 2048);
+    final Set<String> initialApplicationTags =
+        new HashSet<>(Arrays.asList("a", "b", "c"));
+    final Set<String> modifiedApplicationTags =
+        new HashSet<>(Arrays.asList("c", "d", "e"));
+    String[] mediaTypes =
+        { MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML };
+    MediaType[] contentTypes =
+        { MediaType.APPLICATION_JSON_TYPE, MediaType.APPLICATION_XML_TYPE };
+    for (String mediaType : mediaTypes) {
+      for (MediaType contentType : contentTypes) {
+        MockRMAppSubmissionData data =
+            MockRMAppSubmissionData.Builder.createWithMemory(CONTAINER_MB, rm)
+                .withAppName("")
+                .withApplicationTags(initialApplicationTags)
+                .withUser(webserviceUserName)
+                .build();
+        RMApp app = MockRMAppSubmitter.submit(rm, data);
+        amNodeManager.nodeHeartbeat(true);
+
+        ClientResponse response =
+            this
+                .constructWebResource("apps", app.getApplicationId().toString(),
+                    "tags").accept(mediaType)
+                .get(ClientResponse.class);
+        assertResponseStatusCode(Status.OK, response.getStatusInfo());
+        System.out.println("tomi assert json tags1 " + response);
+        if (contentType.equals(MediaType.APPLICATION_JSON_TYPE)) {
+          verifyApplicationTagsJson(response, initialApplicationTags);
+        } else {
+          verifyApplicationTagsXml(response, initialApplicationTags);
+        }
+
+        Object entity;
+        if (contentType.equals(MediaType.APPLICATION_JSON_TYPE)) {
+          System.out.println("tomi json tags");
+          entity = "[\"c\", \"d\", \"e\"]";
+        } else {
+          System.out.println("tomi xml tags");
+          entity = new HashSet<>(Arrays.asList("a", "b", "c"));
+        }
+        response =
+            this
+                .constructWebResource("apps", app.getApplicationId().toString(),
+                    "tags").entity(entity, contentType).accept(mediaType)
+                .put(ClientResponse.class);
+
+        System.out.println("tomi is auth enabled? " + isAuthenticationEnabled());
+        if (!isAuthenticationEnabled()) {
+          System.out.println("tomi asserting unauthorized " + response.getStatusInfo());
+          assertResponseStatusCode(Status.UNAUTHORIZED,
+              response.getStatusInfo());
+          continue;
+        }
+        assertResponseStatusCode(Status.OK, response.getStatusInfo());
+        if (mediaType.contains(MediaType.APPLICATION_JSON)) {
+          System.out.println("tomi assert json tags " + response);
+          verifyApplicationTagsJson(response, modifiedApplicationTags);
+        } else {
+          System.out.println("tomi assert xml tags " + response);
+          verifyApplicationTagsXml(response, modifiedApplicationTags);
+        }
+
+        String locationHeaderValue =
+            response.getHeaders().getFirst(HttpHeaders.LOCATION);
+        Client c = Client.create();
+        WebResource tmp = c.resource(locationHeaderValue);
+        if (isAuthenticationEnabled()) {
+          tmp = tmp.queryParam("user.name", webserviceUserName);
+        }
+        response = tmp.get(ClientResponse.class);
+        assertResponseStatusCode(Status.OK, response.getStatusInfo());
+        assertTrue(locationHeaderValue.endsWith("/ws/v1/cluster/apps/"
+            + app.getApplicationId().toString() + "/state"));
+
+        while (true) {
+          Thread.sleep(100);
+          response =
+              this
+                  .constructWebResource("apps",
+                      app.getApplicationId().toString(), "state").accept(mediaType)
+                  .entity(entity, contentType).put(ClientResponse.class);
+          assertTrue(
+              (response.getStatusInfo().getStatusCode()
+                  == Status.ACCEPTED.getStatusCode())
+                  || (response.getStatusInfo().getStatusCode()
+                  == Status.OK.getStatusCode()));
+          if (response.getStatusInfo().getStatusCode()
+              == Status.OK.getStatusCode()) {
+            assertEquals(RMAppState.KILLED, app.getState());
+            if (mediaType.equals(MediaType.APPLICATION_JSON)) {
+              verifyAppStateJson(response, RMAppState.KILLED);
+            } else {
+              verifyAppStateXML(response, RMAppState.KILLED);
+            }
+            //assertTrue("Diagnostic message is incorrect",
+            //    app.getDiagnostics().toString().contains(diagnostic));
+            break;
+          }
+        }
+      }
+    }
+
+    rm.stop();
+  }
+
+  protected static void verifyApplicationTagsJson(ClientResponse response,
+                                                  Set<String> tags) throws JSONException {
+    System.out.println("tomi json verify");
+    assertEquals(MediaType.APPLICATION_JSON_TYPE + "; " + JettyUtils.UTF_8,
+        response.getType().toString());
+    JSONArray json = response.getEntity(JSONArray.class);
+    assertNotNull("application tags must not be null", json);
+    Set<String> actual = new HashSet<>();
+    int len = json.length();
+    for (int i = 0; i < len; i++) {
+      actual.add(json.get(i).toString());
+    }
+    assertEquals("application tags must match", tags, actual);
+  }
+
+  protected static void verifyApplicationTagsXml(ClientResponse response,
+                                                 Set<String> tags) throws ParserConfigurationException,
+      IOException, SAXException {
+    System.out.println("tomi xml verify1");
+  //  assertEquals(MediaType.APPLICATION_XML_TYPE + "; " + JettyUtils.UTF_8,
+  //      response.getType().toString());
+    String xml = response.getEntity(String.class);
+    System.out.println("tomi xml verify2 " + xml);
+    DocumentBuilderFactory dbf = XMLUtils.newSecureDocumentBuilderFactory();
+    DocumentBuilder db = dbf.newDocumentBuilder();
+    InputSource is = new InputSource();
+    is.setCharacterStream(new StringReader(xml));
+    Document dom = db.parse(is);
+    System.out.println("tomi dom: " + dom);
+    Set<String> actual = new HashSet<>();
+    assertEquals("application tags must match", tags, actual);
   }
 
   // Simple test - just post to /apps/new-application and validate the response

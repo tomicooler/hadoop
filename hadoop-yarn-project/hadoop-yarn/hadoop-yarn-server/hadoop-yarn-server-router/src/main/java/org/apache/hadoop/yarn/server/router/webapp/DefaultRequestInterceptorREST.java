@@ -272,11 +272,10 @@ public class DefaultRequestInterceptorREST
   }
 
   @Override
-  public Set<String> getAppTags(HttpServletRequest hsr, String appId)
+  public Response getAppTags(HttpServletRequest hsr, String appId)
       throws AuthorizationException {
-    // todo genericForward  Unchecked assignment: 'java.util.Set' to 'java.util.Set<java.lang.String>'
     return RouterWebServiceUtil.genericForward(webAppAddress, hsr,
-        Set.class, HTTPMethods.GET, RMWSConsts.RM_WEB_SERVICE_PATH
+        Response.class, HTTPMethods.GET, RMWSConsts.RM_WEB_SERVICE_PATH
             + RMWSConsts.APPS + "/" + appId + "/" + RMWSConsts.TAGS,
         null, null, getConf(), client);
   }

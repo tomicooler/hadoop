@@ -501,7 +501,7 @@ public class RouterWebServices implements RMWebServiceProtocol {
   @Produces({MediaType.APPLICATION_JSON + "; " + JettyUtils.UTF_8,
       MediaType.APPLICATION_XML + "; " + JettyUtils.UTF_8})
   @Override
-  public Set<String> getAppTags(HttpServletRequest hsr, String appId) throws AuthorizationException {
+  public Response getAppTags(HttpServletRequest hsr, String appId) throws AuthorizationException {
     init();
     RequestInterceptorChainWrapper pipeline = getInterceptorChain(hsr);
     return pipeline.getRootInterceptor().getAppTags(hsr, appId);

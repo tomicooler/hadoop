@@ -326,11 +326,8 @@ public interface RMWebServiceProtocol {
    * @return the tags for a specific application
    * @throws AuthorizationException if the user is not authorized
    */
-  Set<String> getAppTags(HttpServletRequest hsr, String appId)
+  Response getAppTags(HttpServletRequest hsr, String appId)
       throws AuthorizationException;
-
-  // TODO Set<String> ??
-  // TODO 7 implementation like the others
 
   /**
    * This method updates the tags of the app in input, and it is reachable by

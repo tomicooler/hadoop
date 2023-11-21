@@ -757,7 +757,7 @@ public class FederationInterceptorREST extends AbstractRESTRequestInterceptor {
   }
 
   @Override
-  public Set<String> getAppTags(HttpServletRequest hsr, String appId) throws AuthorizationException {
+  public Response getAppTags(HttpServletRequest hsr, String appId) throws AuthorizationException {
     // TODO
     return null;
   }
