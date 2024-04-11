@@ -21,6 +21,7 @@ package org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.policy;
 import org.apache.hadoop.thirdparty.com.google.common.collect.ImmutableSet;
 
 import org.apache.hadoop.yarn.api.records.Priority;
+import org.apache.hadoop.yarn.api.records.Resource;
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.QueueResourceQuotas;
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CSQueue;
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.QueueCapacities;
@@ -30,6 +31,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -249,5 +251,59 @@ public class TestPriorityUtilizationQueueOrderingPolicy {
         new float[] { 0.0f, 0.0f, 0.1f, 0.3f, 0.3f }, "x"));
     verifyOrder(policy, "x", new String[] { "e", "c", "d", "b", "a" });
 
+  }
+
+  public double randFloat(double min, double max) {
+    return min + ThreadLocalRandom.current().nextFloat() * (max - min);
+  }
+
+  public int randInt(int min, int max) {
+    return ThreadLocalRandom.current().nextInt(min, max + 1);
+  }
+
+  @Test
+  public void testComparator() {
+    PriorityUtilizationQueueOrderingPolicy policy =
+        new PriorityUtilizationQueueOrderingPolicy(true);
+
+    for (int j = 0; j < 10000; ++j) {
+      final String partition = "x";
+      List<CSQueue> list = new ArrayList<>();
+      for (int i = 0; i < 10; i++) {
+        CSQueue q = mock(CSQueue.class);
+        when(q.getQueuePath()).thenReturn(String.format("%d", i));
+
+        QueueCapacities qc = new QueueCapacities(false);
+        qc.setAbsoluteCapacity(partition, (float) randFloat(0.0d, 100.0d));
+        qc.setUsedCapacity(partition, (float) randFloat(0.0d, 100.0d));
+        qc.setAbsoluteUsedCapacity(partition, (float) randFloat(0.0d, 100.0d));
+        System.out.println("  " + qc);
+
+        when(q.getQueueCapacities()).thenReturn(qc);
+        when(q.getPriority()).thenReturn(Priority.newInstance(randInt(0, 10)));
+
+        int x = randInt(0, 3);
+        if (x == 0) {
+          when(q.getAccessibleNodeLabels()).thenReturn(ImmutableSet.of("x"));
+        } else if (x == 1) {
+          when(q.getAccessibleNodeLabels()).thenReturn(ImmutableSet.of("y"));
+        }
+        System.out.println("  node labels " + q.getAccessibleNodeLabels());
+
+        QueueResourceQuotas qr = new QueueResourceQuotas();
+        qr.setConfiguredMinResource(partition, Resource.newInstance(randInt(1, 10) * 1024, randInt(1, 10)));
+        when(q.getQueueResourceQuotas()).thenReturn(qr);
+        System.out.println("  min resource " + q.getQueueResourceQuotas().getConfiguredMinResource(partition));
+        list.add(q);
+      }
+
+      policy.setQueues(list);
+      Iterator<CSQueue> assignmentIterator = policy.getAssignmentIterator(partition);
+      while (assignmentIterator.hasNext()) {
+        assignmentIterator.next();
+      }
+
+      System.out.println("######## " + j);
+    }
   }
 }
