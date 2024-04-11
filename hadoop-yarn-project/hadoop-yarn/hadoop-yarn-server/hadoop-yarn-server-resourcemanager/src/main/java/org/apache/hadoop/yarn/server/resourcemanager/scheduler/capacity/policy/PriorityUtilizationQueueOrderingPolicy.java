@@ -29,9 +29,11 @@ import org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity
 import org.apache.hadoop.yarn.util.resource.Resources;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -54,7 +56,7 @@ import java.util.stream.Collectors;
 public class PriorityUtilizationQueueOrderingPolicy
     implements QueueOrderingPolicy {
   private List<CSQueue> queues;
-  private boolean respectPriority;
+  private static boolean respectPriority;
 
   // This makes multiple threads can sort queues at the same time
   // For different partitions.
@@ -101,12 +103,15 @@ public class PriorityUtilizationQueueOrderingPolicy
   /**
    * Comparator that both looks at priority and utilization
    */
-  private class PriorityQueueComparator
+  private static class PriorityQueueComparator
       implements Comparator<PriorityQueueResourcesForSorting> {
 
     @Override
     public int compare(PriorityQueueResourcesForSorting q1Sort,
         PriorityQueueResourcesForSorting q2Sort) {
+      if (false) { // VIOLATE THE CONTRACT!!!
+        return ThreadLocalRandom.current().nextInt(0, 3) - 1;
+      }
       String p = partitionToLookAt.get();
 
       int rc = compareQueueAccessToPartition(q1Sort.queue, q2Sort.queue, p);
@@ -255,6 +260,14 @@ public class PriorityUtilizationQueueOrderingPolicy
     // partitionToLookAt is a thread local variable, therefore it is safe to mutate it.
     PriorityUtilizationQueueOrderingPolicy.partitionToLookAt.set(partition);
 
+    if (false) {
+      List<PriorityQueueResourcesForSorting> elements = new ArrayList<>();
+      for (CSQueue queue : queues) {
+        elements.add(new PriorityQueueResourcesForSorting(queue));
+      }
+      verifyTransitivity(new PriorityQueueComparator(), elements);
+    }
+
     // Copy (for thread safety) and sort the snapshot of the queues in order to avoid breaking
     // the prerequisites of TimSort. See YARN-10178 for details.
     return new ArrayList<>(queues).stream().map(PriorityQueueResourcesForSorting::new).sorted(
@@ -276,5 +289,63 @@ public class PriorityUtilizationQueueOrderingPolicy
   @VisibleForTesting
   public List<CSQueue> getQueues() {
     return queues;
+  }
+
+
+  // credits https://stackoverflow.com/questions/11441666/java-error-comparison-method-violates-its-general-contract
+  /**
+   * Verify that a comparator is transitive.
+   *
+   * @param <T>        the type being compared
+   * @param comparator the comparator to test
+   * @param elements   the elements to test against
+   * @throws AssertionError if the comparator is not transitive
+   */
+  public static <T> void verifyTransitivity(Comparator<T> comparator, Collection<T> elements)
+  {
+    for (T first: elements)
+    {
+      for (T second: elements)
+      {
+        int result1 = comparator.compare(first, second);
+        int result2 = comparator.compare(second, first);
+        if (result1 != -result2)
+        {
+          // Uncomment the following line to step through the failed case
+          //comparator.compare(first, second);
+          //System.out.println("compare(" + first + ", " + second + ") == " + result1 +
+          //    " but swapping the parameters returns " + result2);
+          throw new AssertionError("compare(" + first + ", " + second + ") == " + result1 +
+              " but swapping the parameters returns " + result2);
+        }
+      }
+    }
+    for (T first: elements)
+    {
+      for (T second: elements)
+      {
+        int firstGreaterThanSecond = comparator.compare(first, second);
+        if (firstGreaterThanSecond <= 0)
+          continue;
+        for (T third: elements)
+        {
+          int secondGreaterThanThird = comparator.compare(second, third);
+          if (secondGreaterThanThird <= 0)
+            continue;
+          int firstGreaterThanThird = comparator.compare(first, third);
+          if (firstGreaterThanThird <= 0)
+          {
+            // Uncomment the following line to step through the failed case
+            //comparator.compare(first, third);
+            //System.out.println("compare(" + first + ", " + second + ") > 0, " +
+            //   "compare(" + second + ", " + third + ") > 0, but compare(" + first + ", " + third + ") == " +
+            //    firstGreaterThanThird);
+            throw new AssertionError("compare(" + first + ", " + second + ") > 0, " +
+                "compare(" + second + ", " + third + ") > 0, but compare(" + first + ", " + third + ") == " +
+                firstGreaterThanThird);
+          }
+        }
+      }
+    }
   }
 }
