@@ -27,11 +27,12 @@ import org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CSQueue;
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.QueueCapacities;
 import org.junit.Assert;
 import org.junit.Test;
-import org.mockito.stubbing.OngoingStubbing;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static org.mockito.Mockito.mock;
@@ -264,6 +265,7 @@ public class TestPriorityUtilizationQueueOrderingPolicy {
 
   @Test
   public void testComparator() {
+    final String []nodeLabels = {"x", "y", "z"};
     PriorityUtilizationQueueOrderingPolicy policy =
         new PriorityUtilizationQueueOrderingPolicy(true);
 
@@ -274,34 +276,39 @@ public class TestPriorityUtilizationQueueOrderingPolicy {
         CSQueue q = mock(CSQueue.class);
         when(q.getQueuePath()).thenReturn(String.format("%d", i));
 
-        QueueCapacities qc = new QueueCapacities(false);
-        qc.setAbsoluteCapacity(partition, (float) randFloat(0.0d, 100.0d));
-        qc.setUsedCapacity(partition, (float) randFloat(0.0d, 100.0d));
-        qc.setAbsoluteUsedCapacity(partition, (float) randFloat(0.0d, 100.0d));
-        //System.out.println("  " + qc);
+        // simulating change in queueCapacities
+        when(q.getQueueCapacities())
+            .thenReturn(randomQueueCapacities(partition))
+            .thenReturn(randomQueueCapacities(partition))
+            .thenReturn(randomQueueCapacities(partition))
+            .thenReturn(randomQueueCapacities(partition))
+            .thenReturn(randomQueueCapacities(partition));
 
-        when(q.getQueueCapacities()).thenReturn(qc);
-        //when(q.getPriority()).thenReturn(Priority.newInstance(randInt(0, 10)));
-
-        // simulating change in the priority -> java.lang.IllegalArgumentException: Comparison method violates its general contract!
-        when(q.getPriority()).thenReturn(Priority.newInstance(randInt(0, 10)))
+        // simulating change in the priority
+        when(q.getPriority())
+            .thenReturn(Priority.newInstance(randInt(0, 10)))
             .thenReturn(Priority.newInstance(randInt(0, 10)))
             .thenReturn(Priority.newInstance(randInt(0, 10)))
             .thenReturn(Priority.newInstance(randInt(0, 10)))
             .thenReturn(Priority.newInstance(randInt(0, 10)));
 
-        int x = randInt(0, 3);
-        if (x == 0) {
-          when(q.getAccessibleNodeLabels()).thenReturn(ImmutableSet.of("x"));
-        } else if (x == 1) {
-          when(q.getAccessibleNodeLabels()).thenReturn(ImmutableSet.of("y"));
+        if (randInt(0, 3) == 1) {
+          // simulating change in nodeLabels
+          when(q.getAccessibleNodeLabels())
+              .thenReturn(randomNodeLabels(nodeLabels))
+              .thenReturn(randomNodeLabels(nodeLabels))
+              .thenReturn(randomNodeLabels(nodeLabels))
+              .thenReturn(randomNodeLabels(nodeLabels))
+              .thenReturn(randomNodeLabels(nodeLabels));
         }
-        //System.out.println("  node labels " + q.getAccessibleNodeLabels());
 
-        QueueResourceQuotas qr = new QueueResourceQuotas();
-        qr.setConfiguredMinResource(partition, Resource.newInstance(randInt(1, 10) * 1024, randInt(1, 10)));
-        when(q.getQueueResourceQuotas()).thenReturn(qr);
-        //System.out.println("  min resource " + q.getQueueResourceQuotas().getConfiguredMinResource(partition));
+        // simulating change in configuredMinResource
+        when(q.getQueueResourceQuotas())
+            .thenReturn(randomResourceQuotas(partition))
+            .thenReturn(randomResourceQuotas(partition))
+            .thenReturn(randomResourceQuotas(partition))
+            .thenReturn(randomResourceQuotas(partition))
+            .thenReturn(randomResourceQuotas(partition));
         list.add(q);
       }
 
@@ -313,5 +320,29 @@ public class TestPriorityUtilizationQueueOrderingPolicy {
 
       System.out.println("######## " + j);
     }
+  }
+
+  private QueueCapacities randomQueueCapacities(String partition) {
+    QueueCapacities qc = new QueueCapacities(false);
+    qc.setAbsoluteCapacity(partition, (float) randFloat(0.0d, 100.0d));
+    qc.setUsedCapacity(partition, (float) randFloat(0.0d, 100.0d));
+    qc.setAbsoluteUsedCapacity(partition, (float) randFloat(0.0d, 100.0d));
+    return qc;
+  }
+
+  private Set<String> randomNodeLabels(String []availableNodeLabels) {
+    Set<String> nodeLabels = new HashSet<>();
+    for (String label : availableNodeLabels) {
+      if (randInt(0, 1) == 1) {
+        nodeLabels.add(label);
+      }
+    }
+    return nodeLabels;
+  }
+
+  private QueueResourceQuotas randomResourceQuotas(String partition) {
+    QueueResourceQuotas qr = new QueueResourceQuotas();
+    qr.setConfiguredMinResource(partition, Resource.newInstance(randInt(1, 10) * 1024, randInt(1, 10)));
+    return qr;
   }
 }

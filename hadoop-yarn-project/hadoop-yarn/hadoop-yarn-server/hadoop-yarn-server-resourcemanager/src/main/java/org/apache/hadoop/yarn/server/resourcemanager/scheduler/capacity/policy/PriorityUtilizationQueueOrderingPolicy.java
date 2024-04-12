@@ -59,16 +59,6 @@ public class PriorityUtilizationQueueOrderingPolicy
   private List<CSQueue> queues;
   private static boolean respectPriority;
 
-  // This makes multiple threads can sort queues at the same time
-  // For different partitions.
-  private static ThreadLocal<String> partitionToLookAt =
-      ThreadLocal.withInitial(new Supplier<String>() {
-        @Override
-        public String get() {
-          return RMNodeLabelsManager.NO_LABEL;
-        }
-      });
-
   /**
    * Compare two queues with possibly different priority and assigned capacity,
    * Will be used by preemption policy as well.
@@ -107,15 +97,15 @@ public class PriorityUtilizationQueueOrderingPolicy
   private static class PriorityQueueComparator
       implements Comparator<PriorityQueueResourcesForSorting> {
 
+    String partitionToLookAt = RMNodeLabelsManager.NO_LABEL;
+
     @Override
     public int compare(PriorityQueueResourcesForSorting q1Sort,
         PriorityQueueResourcesForSorting q2Sort) {
       if (false) { // VIOLATE THE CONTRACT!!!
         return ThreadLocalRandom.current().nextInt(0, 3) - 1;
       }
-      String p = partitionToLookAt.get();
-
-      int rc = compareQueueAccessToPartition(q1Sort.queue, q2Sort.queue, p);
+      int rc = compareQueueAccessToPartition(q1Sort.nodeLabelAccessible, q2Sort.nodeLabelAccessible, partitionToLookAt);
       if (0 != rc) {
         return rc;
       }
@@ -187,7 +177,7 @@ public class PriorityUtilizationQueueOrderingPolicy
       return rc;
     }
 
-    private int compareQueueAccessToPartition(CSQueue q1, CSQueue q2,
+    private int compareQueueAccessToPartition(boolean q1Accessible, boolean q2Accessible,
         String partition) {
       // Everybody has access to default partition
       if (StringUtils.equals(partition, RMNodeLabelsManager.NO_LABEL)) {
@@ -198,14 +188,6 @@ public class PriorityUtilizationQueueOrderingPolicy
        * Check accessible to given partition, if one queue accessible and
        * the other not, accessible queue goes first.
        */
-      boolean q1Accessible =
-          q1.getAccessibleNodeLabels() != null && q1.getAccessibleNodeLabels()
-              .contains(partition) || q1.getAccessibleNodeLabels().contains(
-              RMNodeLabelsManager.ANY);
-      boolean q2Accessible =
-          q2.getAccessibleNodeLabels() != null && q2.getAccessibleNodeLabels()
-              .contains(partition) || q2.getAccessibleNodeLabels().contains(
-              RMNodeLabelsManager.ANY);
       if (q1Accessible && !q2Accessible) {
         return -1;
       } else if (!q1Accessible && q2Accessible) {
@@ -225,23 +207,31 @@ public class PriorityUtilizationQueueOrderingPolicy
     private final Resource configuredMinResource;
     private final float absoluteCapacity;
     private final Priority priority;
+    private final boolean nodeLabelAccessible;
     private final CSQueue queue;
 
-    PriorityQueueResourcesForSorting(CSQueue queue) {
+    PriorityQueueResourcesForSorting(CSQueue queue, String partition) {
       this.queue = queue;
       this.absoluteUsedCapacity =
           queue.getQueueCapacities().
-              getAbsoluteUsedCapacity(partitionToLookAt.get());
+              getAbsoluteUsedCapacity(partition);
       this.usedCapacity =
           queue.getQueueCapacities().
-              getUsedCapacity(partitionToLookAt.get());
+              getUsedCapacity(partition);
       this.absoluteCapacity =
           queue.getQueueCapacities().
-              getAbsoluteCapacity(partitionToLookAt.get());
+              getAbsoluteCapacity(partition);
       this.configuredMinResource =
           queue.getQueueResourceQuotas().
-              getConfiguredMinResource(partitionToLookAt.get());
+              getConfiguredMinResource(partition);
       this.priority = queue.getPriority();
+      this.nodeLabelAccessible = queue.getAccessibleNodeLabels() != null && queue.getAccessibleNodeLabels()
+          .contains(partition) || queue.getAccessibleNodeLabels().contains(
+          RMNodeLabelsManager.ANY);
+    }
+
+    static PriorityQueueResourcesForSorting create(CSQueue queue, String partition) {
+      return new PriorityQueueResourcesForSorting(queue, partition);
     }
 
     public CSQueue getQueue() {
@@ -260,20 +250,9 @@ public class PriorityUtilizationQueueOrderingPolicy
 
   @Override
   public Iterator<CSQueue> getAssignmentIterator(String partition) {
-    // partitionToLookAt is a thread local variable, therefore it is safe to mutate it.
-    PriorityUtilizationQueueOrderingPolicy.partitionToLookAt.set(partition);
-
-    if (false) {
-      List<PriorityQueueResourcesForSorting> elements = new ArrayList<>();
-      for (CSQueue queue : queues) {
-        elements.add(new PriorityQueueResourcesForSorting(queue));
-      }
-      verifyTransitivity(new PriorityQueueComparator(), elements);
-    }
-
     // Copy (for thread safety) and sort the snapshot of the queues in order to avoid breaking
     // the prerequisites of TimSort. See YARN-10178 for details.
-    return new ArrayList<>(queues).stream().map(PriorityQueueResourcesForSorting::new).sorted(
+    return new ArrayList<>(queues).stream().map(queue -> PriorityQueueResourcesForSorting.create(queue, partition)).sorted(
         new PriorityQueueComparator()).map(PriorityQueueResourcesForSorting::getQueue).collect(
             Collectors.toList()).iterator();
   }
@@ -292,63 +271,5 @@ public class PriorityUtilizationQueueOrderingPolicy
   @VisibleForTesting
   public List<CSQueue> getQueues() {
     return queues;
-  }
-
-
-  // credits https://stackoverflow.com/questions/11441666/java-error-comparison-method-violates-its-general-contract
-  /**
-   * Verify that a comparator is transitive.
-   *
-   * @param <T>        the type being compared
-   * @param comparator the comparator to test
-   * @param elements   the elements to test against
-   * @throws AssertionError if the comparator is not transitive
-   */
-  public static <T> void verifyTransitivity(Comparator<T> comparator, Collection<T> elements)
-  {
-    for (T first: elements)
-    {
-      for (T second: elements)
-      {
-        int result1 = comparator.compare(first, second);
-        int result2 = comparator.compare(second, first);
-        if (result1 != -result2)
-        {
-          // Uncomment the following line to step through the failed case
-          //comparator.compare(first, second);
-          //System.out.println("compare(" + first + ", " + second + ") == " + result1 +
-          //    " but swapping the parameters returns " + result2);
-          throw new AssertionError("compare(" + first + ", " + second + ") == " + result1 +
-              " but swapping the parameters returns " + result2);
-        }
-      }
-    }
-    for (T first: elements)
-    {
-      for (T second: elements)
-      {
-        int firstGreaterThanSecond = comparator.compare(first, second);
-        if (firstGreaterThanSecond <= 0)
-          continue;
-        for (T third: elements)
-        {
-          int secondGreaterThanThird = comparator.compare(second, third);
-          if (secondGreaterThanThird <= 0)
-            continue;
-          int firstGreaterThanThird = comparator.compare(first, third);
-          if (firstGreaterThanThird <= 0)
-          {
-            // Uncomment the following line to step through the failed case
-            //comparator.compare(first, third);
-            //System.out.println("compare(" + first + ", " + second + ") > 0, " +
-            //   "compare(" + second + ", " + third + ") > 0, but compare(" + first + ", " + third + ") == " +
-            //    firstGreaterThanThird);
-            throw new AssertionError("compare(" + first + ", " + second + ") > 0, " +
-                "compare(" + second + ", " + third + ") > 0, but compare(" + first + ", " + third + ") == " +
-                firstGreaterThanThird);
-          }
-        }
-      }
-    }
   }
 }
