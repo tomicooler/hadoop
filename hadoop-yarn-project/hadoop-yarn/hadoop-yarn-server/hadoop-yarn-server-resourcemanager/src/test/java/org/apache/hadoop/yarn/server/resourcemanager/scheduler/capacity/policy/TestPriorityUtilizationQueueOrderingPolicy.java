@@ -27,6 +27,7 @@ import org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.CSQueue;
 import org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.QueueCapacities;
 import org.junit.Assert;
 import org.junit.Test;
+import org.mockito.stubbing.OngoingStubbing;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -280,7 +281,14 @@ public class TestPriorityUtilizationQueueOrderingPolicy {
         //System.out.println("  " + qc);
 
         when(q.getQueueCapacities()).thenReturn(qc);
-        when(q.getPriority()).thenReturn(Priority.newInstance(randInt(0, 10)));
+        //when(q.getPriority()).thenReturn(Priority.newInstance(randInt(0, 10)));
+
+        // simulating change in the priority -> java.lang.IllegalArgumentException: Comparison method violates its general contract!
+        when(q.getPriority()).thenReturn(Priority.newInstance(randInt(0, 10)))
+            .thenReturn(Priority.newInstance(randInt(0, 10)))
+            .thenReturn(Priority.newInstance(randInt(0, 10)))
+            .thenReturn(Priority.newInstance(randInt(0, 10)))
+            .thenReturn(Priority.newInstance(randInt(0, 10)));
 
         int x = randInt(0, 3);
         if (x == 0) {
