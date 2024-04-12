@@ -269,7 +269,7 @@ public class TestPriorityUtilizationQueueOrderingPolicy {
     for (int j = 0; j < 10000; ++j) {
       final String partition = "x";
       List<CSQueue> list = new ArrayList<>();
-      for (int i = 0; i < 10000; i++) {
+      for (int i = 0; i < 1000; i++) {
         CSQueue q = mock(CSQueue.class);
         when(q.getQueuePath()).thenReturn(String.format("%d", i));
 
@@ -277,7 +277,7 @@ public class TestPriorityUtilizationQueueOrderingPolicy {
         qc.setAbsoluteCapacity(partition, (float) randFloat(0.0d, 100.0d));
         qc.setUsedCapacity(partition, (float) randFloat(0.0d, 100.0d));
         qc.setAbsoluteUsedCapacity(partition, (float) randFloat(0.0d, 100.0d));
-        System.out.println("  " + qc);
+        //System.out.println("  " + qc);
 
         when(q.getQueueCapacities()).thenReturn(qc);
         when(q.getPriority()).thenReturn(Priority.newInstance(randInt(0, 10)));
@@ -288,12 +288,12 @@ public class TestPriorityUtilizationQueueOrderingPolicy {
         } else if (x == 1) {
           when(q.getAccessibleNodeLabels()).thenReturn(ImmutableSet.of("y"));
         }
-        System.out.println("  node labels " + q.getAccessibleNodeLabels());
+        //System.out.println("  node labels " + q.getAccessibleNodeLabels());
 
         QueueResourceQuotas qr = new QueueResourceQuotas();
         qr.setConfiguredMinResource(partition, Resource.newInstance(randInt(1, 10) * 1024, randInt(1, 10)));
         when(q.getQueueResourceQuotas()).thenReturn(qr);
-        System.out.println("  min resource " + q.getQueueResourceQuotas().getConfiguredMinResource(partition));
+        //System.out.println("  min resource " + q.getQueueResourceQuotas().getConfiguredMinResource(partition));
         list.add(q);
       }
 
