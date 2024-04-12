@@ -20,6 +20,7 @@ package org.apache.hadoop.yarn.server.resourcemanager.scheduler.capacity.policy;
 
 import org.apache.hadoop.classification.VisibleForTesting;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.hadoop.yarn.api.records.Priority;
 import org.apache.hadoop.yarn.api.records.Resource;
 import org.apache.hadoop.yarn.server.resourcemanager.nodelabels
     .RMNodeLabelsManager;
@@ -138,8 +139,8 @@ public class PriorityUtilizationQueueOrderingPolicy
         float used2 = q2Sort.absoluteUsedCapacity;
 
         return compare(q1Sort, q2Sort, used1, used2,
-            q1Sort.queue.getPriority().
-                getPriority(), q2Sort.queue.getPriority().getPriority());
+            q1Sort.priority.
+                getPriority(), q2Sort.priority.getPriority());
       } else{
         // both q1 has positive abs capacity and q2 has positive abs
         // capacity
@@ -147,8 +148,8 @@ public class PriorityUtilizationQueueOrderingPolicy
         float used2 = q2Sort.usedCapacity;
 
         return compare(q1Sort, q2Sort, used1, used2,
-            q1Sort.queue.getPriority().getPriority(),
-            q2Sort.queue.getPriority().getPriority());
+            q1Sort.priority.getPriority(),
+            q2Sort.priority.getPriority());
       }
     }
 
@@ -223,6 +224,7 @@ public class PriorityUtilizationQueueOrderingPolicy
     private final float usedCapacity;
     private final Resource configuredMinResource;
     private final float absoluteCapacity;
+    private final Priority priority;
     private final CSQueue queue;
 
     PriorityQueueResourcesForSorting(CSQueue queue) {
@@ -239,6 +241,7 @@ public class PriorityUtilizationQueueOrderingPolicy
       this.configuredMinResource =
           queue.getQueueResourceQuotas().
               getConfiguredMinResource(partitionToLookAt.get());
+      this.priority = queue.getPriority();
     }
 
     public CSQueue getQueue() {
